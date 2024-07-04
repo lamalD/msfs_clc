@@ -21,5 +21,15 @@ export const topbarLinks = [
         route: '/',
         label: 'Home',
         imgURL: '/icons/home.svg'
-    }
+    },
+    {
+        route: '/pricing',
+        label: 'Pricing',
+        imgURL: '/icons/home.svg'
+    },
+    {
+        route: '/about',
+        label: 'About',
+        imgURL: '/icons/home.svg'
+    },
 ]
