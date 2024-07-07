@@ -1,69 +1,27 @@
 import React from 'react'
 
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import Link from 'next/link'
 
 const Flight = () => {
   return (
-    <div className='flex bg-white-1'>
-      {/* <NavigationMenu className='flex px-4 justify-between bg-black-2'>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Init flight
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Loadplan
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                LoadSheet
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/docs" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Messages
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu> */}
-   
-   <Tabs defaultValue="init" className="w-[400px]">
-    <TabsList>
-      <TabsTrigger value="initflight">Init flight</TabsTrigger>
-      <TabsTrigger value="loadplan">Load Distribution</TabsTrigger>
-      <TabsTrigger value="loadsheet">Loadsheet</TabsTrigger>
-    </TabsList>
-    <TabsContent value="initflight">Make changes to your account here.</TabsContent>
-    <TabsContent value="loadplan">Change your password here.</TabsContent>
-    <TabsContent value="loadsheet">Change your password here.</TabsContent>
-  </Tabs>
-
-
-      <h1 className='text-20 font-bold text-white-1'>My Flight</h1>
+    <div className='flex flex-col w-full bg-black-2'>
+      <Tabs defaultValue="initflight" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger className='rounded-t-xl mb-0' value="initflight">Init flight</TabsTrigger>
+          <TabsTrigger value="loadplan">Load Distribution</TabsTrigger>
+          <TabsTrigger value="loadsheet">Loadsheet</TabsTrigger>
+          <TabsTrigger value="message">Mesages</TabsTrigger>
+        </TabsList>
+        <TabsContent value="initflight">Here the flight will be initialized</TabsContent>
+        <TabsContent value="loadplan">Here details about loadplan can be found</TabsContent>
+        <TabsContent value="loadsheet">Here details about the loadsheet can be found</TabsContent>
+        <TabsContent value="messages">Here all messages can be found</TabsContent>
+      </Tabs>
+      <div>
+        <h1 className='text-20 font-bold text-white-1'>My Flight</h1>
+      </div>
     </div>
   )
 }
