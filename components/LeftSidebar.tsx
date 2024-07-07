@@ -2,6 +2,7 @@
 
 import { sidebarLinks } from '@/constants'
 import { cn } from '@/lib/utils'
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -29,6 +30,16 @@ const LeftSidebar = () => {
                 </Link>
             })}
         </nav>
+        <div className='p-2 bg-black-2 rounded-xl w-fit mb-3'>
+            {/* <SignedOut>
+              <SignInButton>
+                <button className='text-white-1 bg-orange-1 rounded-xl p-2'>Sign In</button>
+              </SignInButton>
+            </SignedOut> */}
+            <SignedIn>
+              <UserButton showName />
+            </SignedIn>
+        </div>
     </section>
   )
 }

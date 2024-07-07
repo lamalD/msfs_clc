@@ -18,7 +18,7 @@ const Navbar = () => {
           <div>
             <Link href='/' className='flex cursor-pointer items-center gap-1 pl-4 pb-10 max-lg:justify-center'>
                 <Image src='/icons/logo.svg' alt='logo' width={23} height={27}/>
-                <h1 className='text-24 font-extrabold text-white-1 max-lg:hidden'>MSFS CLC</h1>
+                <h1 className='text-24 font-extrabold text-white-1 pl-2 max-lg:hidden'>MSFS CLC</h1>
             </Link>
           </div>
           <div className='flex flex-row gap-4'>
@@ -34,7 +34,7 @@ const Navbar = () => {
           <div className='pr-4 pt-2'>
             <SignedOut>
               <SignInButton>
-                <button className='text-white-1 bg-orange-1 rounded-xl'>Sign In</button>
+                <button className='text-white-1 bg-orange-1 rounded-xl p-2'>Sign In</button>
               </SignInButton>
             </SignedOut>
             <SignedIn>

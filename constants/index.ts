@@ -23,6 +23,11 @@ export const topbarLinks = [
         imgURL: '/icons/home.svg'
     },
     {
+        route: '/features',
+        label: 'Features',
+        imgURL: '/icons/home.svg'
+    },
+    {
         route: '/pricing',
         label: 'Pricing',
         imgURL: '/icons/home.svg'
