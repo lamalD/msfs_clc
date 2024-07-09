@@ -1,6 +1,5 @@
-import { connect } from "http2";
 import mongoose, { Mongoose } from "mongoose";
-import { promiseHooks } from "v8";
+
 
 const MONGODB_URL = process.env.MONGODB_URL;
 
