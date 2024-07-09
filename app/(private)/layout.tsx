@@ -15,7 +15,7 @@ export default function RootLayout({
             <div className="flex w-full max-w-6xl flex-col max-sm:px-4">
               <div className="flex h-16 items-center justify-between md:hidden">
                 <Image src="/icons/logo.svg" alt="menu icon" width={30} height={30} />
-                <MobileNav />
+                {/* <MobileNav /> */}
               </div>
               <div className="flex flex-col md:pb-14">
                 {/* Toaster */}

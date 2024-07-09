@@ -3,6 +3,10 @@ import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import Link from 'next/link'
+import InitFlight from '@/components/InitFlight'
+import Loadplan from '@/components/Loadplan'
+import Loadsheet from '@/components/Loadsheet'
+import Messages from '@/components/Messages'
 
 const Flight = () => {
   return (
@@ -12,16 +16,24 @@ const Flight = () => {
           <TabsTrigger className='rounded-t-xl mb-0' value="initflight">Init flight</TabsTrigger>
           <TabsTrigger value="loadplan">Load Distribution</TabsTrigger>
           <TabsTrigger value="loadsheet">Loadsheet</TabsTrigger>
-          <TabsTrigger value="message">Mesages</TabsTrigger>
+          <TabsTrigger value="messages">Mesages</TabsTrigger>
         </TabsList>
-        <TabsContent value="initflight">Here the flight will be initialized</TabsContent>
-        <TabsContent value="loadplan">Here details about loadplan can be found</TabsContent>
-        <TabsContent value="loadsheet">Here details about the loadsheet can be found</TabsContent>
-        <TabsContent value="messages">Here all messages can be found</TabsContent>
+        <TabsContent value="initflight">
+          <InitFlight />
+        </TabsContent>
+        <TabsContent value="loadplan">
+          <Loadplan />
+        </TabsContent>
+        <TabsContent value="loadsheet">
+          <Loadsheet />
+        </TabsContent>
+        <TabsContent value="messages">
+          <Messages />
+        </TabsContent>
       </Tabs>
-      <div>
+      {/* <div>
         <h1 className='text-20 font-bold text-white-1'>My Flight</h1>
-      </div>
+      </div> */}
     </div>
   )
 }

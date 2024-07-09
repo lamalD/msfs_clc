@@ -1,0 +1,25 @@
+import { Tabs } from '@/components/ui/tabs';
+import { Schema, model, models } from "mongoose";
+
+const TransactionSchema = new Schema({
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    stripeId: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    plan: {
+        type: String,
+    },
+    buyer: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
+})
+
+const Transaction = models?.Transaction || model( "Transaction", TransactionSchema );
+
+export default Transaction;
