@@ -6,7 +6,7 @@ declare type CreateUserParams = {
     email: string
     username: string
     firstName: string
-    lastname: string
+    lastName: string
     photo: string
 }
 
