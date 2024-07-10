@@ -1,6 +1,16 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, model, models, Document } from "mongoose";
 
-const UserSchema = new Schema({
+export interface UserProps extends Document {
+    clerkId: string
+    email: string
+    userName: string
+    photo: string
+    firstName?:  string
+    lastName?: string
+    planId?: string
+}
+
+const UserSchema = new Schema<UserProps>({
     clerkId: {
         type: String,
         required: true,
@@ -11,8 +21,9 @@ const UserSchema = new Schema({
         required: true,
         unique: true,
     },
-    username: {
+    userName: {
         type: String,
+        required: true,
         unique: true,
     },
     photo: {

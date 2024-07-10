@@ -16,3 +16,17 @@ declare type UpdateUserParams = {
     userName: string
     photo: string
 }
+
+// ======= TRANSACTION PARAMS
+declare type CheckoutTransactionParams = {
+    plan: string
+    //amount: number
+    buyerId: string
+}
+
+declare type CreateTransactionParams = {
+    stripeId: string
+    plan: string
+    buyerId: string
+    createdAt: Date
+}

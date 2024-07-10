@@ -67,3 +67,21 @@ export async function deleteUser(clerkId: string) {
         handleError(error)
     }
 }
+
+// SUBSCRIBE
+export async function updatePlan(userId: string) {
+    try {
+        await connectToDatabase()
+
+        const updateUserSubscription = await User.findOneAndUpdate(
+            { _id: userId },
+            { planId: 1},
+        )
+
+        if (!updateUserSubscription) throw new Error("User subscription update failed")
+
+        return JSON.parse(JSON.stringify(updateUserSubscription))
+    } catch (error) {
+        handleError(error)
+    }
+}
