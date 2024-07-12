@@ -10,9 +10,11 @@ import { Button } from "../ui/button"
 
 const Subscribe = ({
     plan,
+    amount,
     buyerId,
 }: {
     plan: string
+    amount: number
     buyerId: string
 }) => {
 
@@ -48,6 +50,7 @@ const Subscribe = ({
     const onCheckout = async () => {
         const transaction = {
             plan,
+            amount,
             buyerId,
         }
 

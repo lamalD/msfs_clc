@@ -6,15 +6,21 @@ import { handleError } from "../utils"
 import { connectToDatabase } from "../database/mongoose"
 import Transaction from "../database/models/transaction.model"
 import { updatePlan } from "./user.actions"
+import { plans } from "@/constants";
 
 export async function checkoutSubscription(transaction: CheckoutTransactionParams) {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+
+    const amount = Number(transaction.amount) * 100
+
+    console.log("amount: ", amount)
 
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {
                 price_data: {
                     currency: "eur",
+                    unit_amount: amount,
                     product_data: {
                         name: transaction.plan,
                     }

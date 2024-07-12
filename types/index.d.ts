@@ -20,12 +20,13 @@ declare type UpdateUserParams = {
 // ======= TRANSACTION PARAMS
 declare type CheckoutTransactionParams = {
     plan: string
-    //amount: number
+    amount: number
     buyerId: string
 }
 
 declare type CreateTransactionParams = {
     stripeId: string
+    amount: number
     plan: string
     buyerId: string
     createdAt: Date
