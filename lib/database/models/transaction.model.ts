@@ -1,4 +1,3 @@
-import { Tabs } from '@/components/ui/tabs';
 import { Schema, model, models } from "mongoose";
 
 const TransactionSchema = new Schema({

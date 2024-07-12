@@ -13,8 +13,6 @@ export async function checkoutSubscription(transaction: CheckoutTransactionParam
 
     const amount = Number(transaction.amount) * 100
 
-    console.log("amount: ", amount)
-
     const session = await stripe.checkout.sessions.create({
         line_items: [
             {

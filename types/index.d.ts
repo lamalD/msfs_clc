@@ -17,6 +17,14 @@ declare type UpdateUserParams = {
     photo: string
 }
 
+// ======= FLIGHT PARAMS
+declare type CreateFlightParams = {
+    origin: string
+    destination: string
+    departureDate: string
+    departureTime: string
+}
+
 // ======= TRANSACTION PARAMS
 declare type CheckoutTransactionParams = {
     plan: string

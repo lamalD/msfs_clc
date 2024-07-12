@@ -1,5 +1,3 @@
-import { link } from "fs"
-
 export const sidebarLinks = [
     {
         route: '/dashboard',
@@ -42,54 +40,6 @@ export const topbarLinks = [
 ]
 
 export const plans = [
-    // {
-    //     _id: 1,
-    //     name: "MSFS CLC - Montly Subscription",
-    //     icon: "/assets/icons/free-plan.svg",
-    //     price: 5,
-    //     inclusions: [
-    //         {
-    //             label: "Feature 1",
-    //             isIncluded: true,
-    //         },
-    //         {
-    //             label: "Feature 2",
-    //             isIncluded: true,
-    //         },
-    //         {
-    //             label: "Feature 3",
-    //             isIncluded: true,
-    //         },
-    //         {
-    //             label: "Feature 4",
-    //             isIncluded: true,
-    //         },
-    //     ]
-    // },
-    // {
-    //     _id: 1,
-    //     name: "MSFS CLC - Yearly Subscription",
-    //     icon: "/assets/icons/free-plan.svg",
-    //     price: 50,
-    //     inclusions: [
-    //         {
-    //             label: "Feature 1",
-    //             isIncluded: true,
-    //         },
-    //         {
-    //             label: "Feature 2",
-    //             isIncluded: true,
-    //         },
-    //         {
-    //             label: "Feature 3",
-    //             isIncluded: true,
-    //         },
-    //         {
-    //             label: "Feature 4",
-    //             isIncluded: true,
-    //         },
-    //     ]
-    // }
     {
         link: process.env.STRIPE_PAYMENT_LINK_MONTHLY_SUBSCRIPTION,
         priceId: process.env.STRIPE_PRODUCT_ID_MONTHLY_SUBSCRIPTION,
