@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import User from "../database/models/user.model"
 import { connectToDatabase } from "../database/mongoose"
 import { handleError } from "../utils"
+import Flight from "../database/models/flight.model"
 
 // CREATE USER
 export async function createUser(user: CreateUserParams) {
@@ -26,7 +27,7 @@ export async function getUserById(userId: string) {
 
         const user = await User.findOne({ clerkId: userId})
 
-        if (!user) throw new Error("USer not found")
+        if (!user) throw new Error("User not found")
 
         return JSON.parse(JSON.stringify(user))
     } catch (error) {
@@ -44,6 +45,63 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
         if (!updatedUser) throw new Error("User update failed")
 
         return JSON.parse(JSON.stringify(updatedUser))
+    } catch (error) {
+        handleError(error)
+    }
+}
+
+// GET USER'S CURRENT FLIGHT ID
+export async function getUserCurrentFlightId(usernameSimbrief: string) {
+
+    try {
+        await connectToDatabase()
+
+        // console.log("username get: ", usernameSimbrief)
+
+        const user = await User.findOne({ usernameSimbrief: usernameSimbrief })
+
+        // if (!user) throw new Error("User not found")
+
+        if (!user.currentFlightId) return("No currentFlightId found")
+
+        return JSON.parse(JSON.stringify(user.currentFlightId))
+    } catch (error) {
+        handleError(error)
+    }
+}
+
+// GET USER'S CURRENT FLIGHT BASED ON CURRENTFLIGHTID
+export async function getUserCurrentFlight(usernameSimbrief: string, currentFlightId: string) {
+
+    try {
+        
+        await connectToDatabase()
+
+        const currentFlight = await Flight.findOne({usernameSimbrief: usernameSimbrief, currentFlightId: currentFlightId})
+
+        if (!currentFlight) throw new Error("No flight found!")
+
+        return JSON.parse(JSON.stringify(currentFlight))
+    } catch (error) {
+        handleError(error)
+    }
+}
+
+// UPDATE USER WITH SIMBRIEF FLIGHTDATA
+export async function updateUserWithFlightData(usernameSimbrief:string, currentFlightId: string) {
+    try {
+        await connectToDatabase()
+
+        console.log("usernameSimbrief updateData: ", usernameSimbrief)
+
+        const user = await User.findOne({ usernameSimbrief })
+        
+        if (!user) throw new Error("User not found")
+
+        const updatedUser = await User.findOneAndUpdate({usernameSimbrief}, { currentFlightId: currentFlightId}, {new: true})
+
+        return JSON.parse(JSON.stringify(updatedUser))
+
     } catch (error) {
         handleError(error)
     }

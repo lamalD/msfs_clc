@@ -15,14 +15,30 @@ declare type UpdateUserParams = {
     lastName: string | null
     userName: string
     photo: string
+    simbriefUserId: string
+    currentFlightId: string
 }
 
 // ======= FLIGHT PARAMS
 declare type CreateFlightParams = {
+    username: string
     origin: string
     destination: string
     departureDate: string
     departureTime: string
+    aircraftType: string
+    registration: string
+    flightNumber: string
+    blockFuel: number
+    takeoffFuel: number
+    tripfuel: number
+    dow: number
+    doi: number
+    zfw: number
+    zfwi: number
+    tow: number
+    towi: number
+    ldw: number
 }
 
 // ======= TRANSACTION PARAMS

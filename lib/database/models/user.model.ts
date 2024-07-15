@@ -8,6 +8,8 @@ export interface UserProps extends Document {
     firstName?:  string
     lastName?: string
     planId?: string
+    simbriefUserId?: string
+    currentFlightId?: string
 }
 
 const UserSchema = new Schema<UserProps>({
@@ -39,6 +41,12 @@ const UserSchema = new Schema<UserProps>({
         type: Number,
         default: 0,
     },
+    simbriefUserId: {
+        type: String,
+    },
+    currentFlightId: {
+        type: String,
+    }
 })
 
 const User = models?.User || model("User", UserSchema);

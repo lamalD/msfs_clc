@@ -1,15 +1,27 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from './ui/button'
 
-import LoadSimbriefData from '@/lib/actions/simbrief.action'
+import { LoadSimbriefData } from '@/lib/actions/simbrief.action'
 
 const InitFlight = () => {
+
+    const [loading, setLoading] = useState(false)
+
+    
+
+    const simbriefUser = "Lamal_D"
+
   return (
     <div className='flex flex-col w-full px-4 py-4'>
         <div className='my-4    '>
-            <Button className='rounded-lg bg-white-1 text-black-1 hover:bg-orange-1' onClick={LoadSimbriefData}>Import from Simbrief</Button>
+            <Button 
+                className='rounded-lg bg-white-1 text-black-1 hover:bg-orange-1' 
+                onClick={() => {LoadSimbriefData({usernameSimbrief:simbriefUser})}}
+            >
+                Import from Simbrief
+            </Button>
         </div>    
         <div className='flex border border-white-1 rounded-lg py-2 bg-white-5'>
             <div className='grid grid-cols-4 mx-2 gap-x-2 w-full p-4'>

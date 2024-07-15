@@ -1,44 +1,91 @@
 import { Schema, model, models, Document } from "mongoose";
 
 export interface FlightProps extends Document {
-    clerkId: string
-    email: string
-    userName: Schema.Types.ObjectId
-    photo: string
-    firstName?:  string
-    lastName?: string
-    planId?: string
-    userId: string
+    usernameSimbrief: string
+    origin: string
+    destination: string
+    departureDate: string
+    departureTime: string
+    aircraftType: string
+    registration: string
+    flightNumber: string
+    blockFuel: number
+    takeoffFuel: number
+    tripfuel: number
+    dow: number
+    doi: number
+    zfw: number
+    zfwi: number
+    tow: number
+    towi: number
+    ldw: number
+    units: string
 }
 
 const FlightSchema = new Schema<FlightProps>({
-    clerkId: {
+    usernameSimbrief: {
         type: String,
         required: true,
-        unique: true,
     },
-    email: {
+    origin: {
         type: String,
         required: true,
-        unique: true,
     },
-    userName: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-    },
-    photo: {
+    destination: {
         type: String,
+        required: true,
     },
-    firstName: {
+    departureDate: {
         type: String,
+        required: true,
     },
-    lastName: {
+    departureTime: {
         type: String,
+        required: true,
     },
-    planId: {
-        type: Number,
-        default: 0,
+    aircraftType: {
+        type: String,
+        required: true,
     },
+    flightNumber: {
+        type: String,
+        required: true,
+    },
+    blockFuel: {
+        type: Number
+    },
+    takeoffFuel: {
+        type: Number
+    },
+    tripfuel: {
+        type: Number
+    },
+    dow: {
+        type: Number
+    },
+    doi: {
+        type: Number
+    },
+    zfw: {
+        type: Number
+    },
+    zfwi: {
+        type: Number
+    },
+    tow: {
+        type: Number
+    },
+    towi: {
+        type: Number
+    },
+    ldw: {
+        type: Number
+    },
+    units: {
+        type: String,
+        required: true,
+    },
+
 })
 
 const Flight = models?.Flight || model("Flight", FlightSchema);
