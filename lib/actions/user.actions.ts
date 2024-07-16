@@ -65,23 +65,25 @@ export async function getUserCurrentFlightId(usernameSimbrief: string) {
         if (!user.currentFlightId) return("No currentFlightId found")
 
         return JSON.parse(JSON.stringify(user.currentFlightId))
+
     } catch (error) {
         handleError(error)
     }
 }
 
 // GET USER'S CURRENT FLIGHT BASED ON CURRENTFLIGHTID
-export async function getUserCurrentFlight(usernameSimbrief: string, currentFlightId: string) {
+export async function getUserCurrentFlight(currentFlightId: string) {
 
     try {
         
         await connectToDatabase()
 
-        const currentFlight = await Flight.findOne({usernameSimbrief: usernameSimbrief, currentFlightId: currentFlightId})
+        const currentFlight = await Flight.findOne({_id: currentFlightId})
 
         if (!currentFlight) throw new Error("No flight found!")
 
         return JSON.parse(JSON.stringify(currentFlight))
+
     } catch (error) {
         handleError(error)
     }

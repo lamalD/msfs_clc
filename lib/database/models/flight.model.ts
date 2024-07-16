@@ -1,6 +1,7 @@
 import { Schema, model, models, Document } from "mongoose";
 
 export interface FlightProps extends Document {
+    simbriefId: string
     usernameSimbrief: string
     origin: string
     destination: string
@@ -9,20 +10,41 @@ export interface FlightProps extends Document {
     aircraftType: string
     registration: string
     flightNumber: string
-    blockFuel: number
-    takeoffFuel: number
-    tripfuel: number
-    dow: number
-    doi: number
-    zfw: number
-    zfwi: number
-    tow: number
-    towi: number
-    ldw: number
+    blockFuel: string
+    takeoffFuel: string
+    tripfuel: string
+    dow: string
+    doi: string
+    zfw: string
+    zfwi: string
+    zfwmac: string
+    tow: string
+    towi: string
+    towmac: string
+    ldw: string
+    pld: string
+    paxCount: string
+    pax_weight: string
+    paxCount_F: string
+    paxCount_C: string
+    paxCount_Y: string
+    bagCount: string
+    bag_weight: string
+    cargo: string
+    fwd_hold: string
+    aft_hold: string
+    blk_hold: string
+    ramp_fuel: string
+    to_fuel: string
+    trip_fuel: string
     units: string
 }
 
 const FlightSchema = new Schema<FlightProps>({
+    simbriefId: {
+        type: String,
+        required: true,
+    },
     usernameSimbrief: {
         type: String,
         required: true,
@@ -52,34 +74,85 @@ const FlightSchema = new Schema<FlightProps>({
         required: true,
     },
     blockFuel: {
-        type: Number
+        type: String
     },
     takeoffFuel: {
-        type: Number
+        type: String
     },
     tripfuel: {
-        type: Number
+        type: String
     },
     dow: {
-        type: Number
+        type: String
     },
     doi: {
-        type: Number
+        type: String
     },
     zfw: {
-        type: Number
+        type: String
     },
     zfwi: {
-        type: Number
+        type: String
+    },
+    zfwmac: {
+        type: String
     },
     tow: {
-        type: Number
+        type: String
     },
     towi: {
-        type: Number
+        type: String
+    },
+    towmac: {
+        type: String
     },
     ldw: {
-        type: Number
+        type: String
+    },
+    pld: {
+        type: String
+    },
+    paxCount: {
+        type: String
+    },
+    pax_weight: {
+        type: String
+    },
+    paxCount_F: {
+        type: String
+    },
+    paxCount_C: {
+        type: String
+    },
+    paxCount_Y: {
+        type: String
+    },
+    bagCount: {
+        type: String
+    },
+    bag_weight: {
+        type: String
+    },
+    cargo: {
+        type: String
+    },
+    fwd_hold: {
+        type: String
+    },
+    aft_hold: {
+        type: String
+    },
+    blk_hold: {
+        type: String
+    },
+    ramp_fuel: {
+        type: String
+    },
+    to_fuel: {
+        type: String
+    },
+    trip_fuel: {
+        type: String
     },
     units: {
         type: String,
