@@ -15,8 +15,8 @@ declare type UpdateUserParams = {
     lastName: string | null
     userName: string
     photo: string
-    simbriefUserId: string
-    currentFlightId: string
+    // simbriefUserId: string
+    // currentFlightId: string
 }
 
 // ======= FLIGHT PARAMS
