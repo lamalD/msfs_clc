@@ -32,8 +32,11 @@ export interface FlightProps extends Document {
     bag_weight: string
     cargo: string
     fwd_hold: string
+    fwd_hold_uld: string
     aft_hold: string
+    aft_hold_uld: string
     blk_hold: string
+    blk_hold_uld: string
     ramp_fuel: string
     to_fuel: string
     trip_fuel: string
@@ -139,10 +142,19 @@ const FlightSchema = new Schema<FlightProps>({
     fwd_hold: {
         type: String
     },
+    fwd_hold_uld: {
+        type: String
+    },
     aft_hold: {
         type: String
     },
+    aft_hold_uld: {
+        type: String
+    },
     blk_hold: {
+        type: String
+    },
+    blk_hold_uld: {
         type: String
     },
     ramp_fuel: {

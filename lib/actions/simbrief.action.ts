@@ -15,14 +15,18 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
     
     console.log("usernameSimbrief: ", usernameSimbrief)
     
-    try {
-        const getSimbriefData = async () => {
-            const res = await fetch(`https://www.simbrief.com/api/xml.fetcher.php?username=${usernameSimbrief}&json=1`)
+    const getSimbriefData = async () => {
+        const res = await fetch(`https://www.simbrief.com/api/xml.fetcher.php?username=${usernameSimbrief}&json=1`)
 
-            return res.json()
-        }
+        return res.json()
+    }
+    try {
 
         const data = await getSimbriefData()
+
+        if (!data) {
+            throw new Error("No data retrieved from Simbrief"); // Handle missing data explicitly
+        }
 
         if (data) {
 
@@ -34,22 +38,115 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
     
                     console.log("Updating flight ... with db_id: ", flightState!.id)
     
-                    await updateFlight({flightData:data, usernameSimbrief:usernameSimbrief, _id:flightState!.id})
+                    const updatedFlight = await updateFlight({flightData:data, usernameSimbrief:usernameSimbrief, _id:flightState!.id})
+
+                    const plainData = {
+                        _id: updatedFlight._id,
+                        simbriefId: updatedFlight.simbriefId,
+                        usernameSimbrief: updatedFlight.usernameSimbrief,
+                        origin: updatedFlight.origin,
+                        destination: updatedFlight.destination,
+                        departureDate: updatedFlight.departureDate,
+                        departureTime: updatedFlight.departureTime,
+                        aircraftType: updatedFlight.aircraftType,
+                        flightNumber: updatedFlight.flightNumber,
+                        blockFuel: updatedFlight.blockFuel,
+                        takeoffFuel: updatedFlight.takeoffFuel,
+                        tripfuel: updatedFlight.tripfuel,
+                        dow: updatedFlight.dow,
+                        doi: updatedFlight.doi,
+                        zfw: updatedFlight.zfw,
+                        zfwi: updatedFlight.zfwi,
+                        tow: updatedFlight.tow,
+                        towi: updatedFlight.tow,
+                        ldw: updatedFlight.ldw,
+                        pld: updatedFlight.pld,
+                        paxCount: updatedFlight.paxCount,
+                        pax_weight: updatedFlight.pax_weight,
+                        paxCount_F: updatedFlight.paxCount_F,
+                        paxCount_C: updatedFlight.paxCount_C,
+                        paxCount_Y: updatedFlight.paxCount_Y,
+                        bagCount: updatedFlight.bagCount,
+                        bag_weight: updatedFlight.bag_weight,
+                        cargo: updatedFlight.cargo,
+                        ramp_fuel: updatedFlight.ramp_fuel,
+                        to_fuel: updatedFlight.to_fuel,
+                        trip_fuel: updatedFlight.trip_fuel,
+                        units: updatedFlight.units,
+                        __v: updatedFlight._v,
+                        aft_hold_uld: updatedFlight.aft_hold_uld,
+                        blk_hold_uld: updatedFlight.blk_hold_uld,
+                        fwd_hold_uld: updatedFlight.fwd_hold_uld,
+                        towmac: updatedFlight.towmac,
+                        zfwmac: updatedFlight.zfwmac,
+                        aft_hold: updatedFlight.aft_hold,
+                        blk_hold: updatedFlight.blk_hold,
+                        fwd_hold: updatedFlight.fwd_hold,
+                      }
+
+                    return plainData
                 }
     
                 if (flightState!.status === "create new flight") {
     
-                    await createFlight({flightData:data, usernameSimbrief:usernameSimbrief})
+                    const newFlight = await createFlight({flightData:data, usernameSimbrief:usernameSimbrief})
+
+                    const plainData = {
+                        _id: newFlight._id,
+                        simbriefId: newFlight.simbriefId,
+                        usernameSimbrief: newFlight.usernameSimbrief,
+                        origin: newFlight.origin,
+                        destination: newFlight.destination,
+                        departureDate: newFlight.departureDate,
+                        departureTime: newFlight.departureTime,
+                        aircraftType: newFlight.aircraftType,
+                        flightNumber: newFlight.flightNumber,
+                        blockFuel: newFlight.blockFuel,
+                        takeoffFuel: newFlight.takeoffFuel,
+                        tripfuel: newFlight.tripfuel,
+                        dow: newFlight.dow,
+                        doi: newFlight.doi,
+                        zfw: newFlight.zfw,
+                        zfwi: newFlight.zfwi,
+                        tow: newFlight.tow,
+                        towi: newFlight.tow,
+                        ldw: newFlight.ldw,
+                        pld: newFlight.pld,
+                        paxCount: newFlight.paxCount,
+                        pax_weight: newFlight.pax_weight,
+                        paxCount_F: newFlight.paxCount_F,
+                        paxCount_C: newFlight.paxCount_C,
+                        paxCount_Y: newFlight.paxCount_Y,
+                        bagCount: newFlight.bagCount,
+                        bag_weight: newFlight.bag_weight,
+                        cargo: newFlight.cargo,
+                        ramp_fuel: newFlight.ramp_fuel,
+                        to_fuel: newFlight.to_fuel,
+                        trip_fuel: newFlight.trip_fuel,
+                        units: newFlight.units,
+                        __v: newFlight._v,
+                        aft_hold_uld: newFlight.aft_hold_uld,
+                        blk_hold_uld: newFlight.blk_hold_uld,
+                        fwd_hold_uld: newFlight.fwd_hold_uld,
+                        towmac: newFlight.towmac,
+                        zfwmac: newFlight.zfwmac,
+                        aft_hold: newFlight.aft_hold,
+                        blk_hold: newFlight.blk_hold,
+                        fwd_hold: newFlight.fwd_hold,
+                      }
+
+                    return plainData
                 }
             } else {
                 console.log("Aircraft currently not supported")
-                return("Aircraft currently not supported!")
+                throw new Error("Aircraft currently not supported!")
             }
 
         } else {
             console.log("No data")
         }
     } catch (error) {
+        console.error("Error fetching Simbrief data:", error);
         handleError(error)
     }
 }
@@ -61,7 +158,7 @@ export async function checkFlight({flightData, usernameSimbrief}:{flightData:any
         await connectToDatabase()
 
         const currentFlightId = await getUserCurrentFlightId(usernameSimbrief)
-        // console.log("currentFlightId: ", currentFlightId)
+        console.log("currentFlightId: ", currentFlightId)
 
         if (currentFlightId === "No currentFlightId found") {
             // console.log("No currentFlightId found, downloaded flight can be inserted in DB.")
@@ -93,8 +190,9 @@ export async function checkFlight({flightData, usernameSimbrief}:{flightData:any
                 
                 return({status: "create new flight", id: ""})
             }
-        }   
+        } 
     } catch (error) {
+        console.error("Error checking flight:", error);
         handleError(error)
     }
 }
@@ -110,8 +208,8 @@ export async function createFlight({flightData, usernameSimbrief}:{flightData:an
             usernameSimbrief: usernameSimbrief,
             origin: flightData.origin.iata_code,
             destination: flightData.destination.iata_code,
-            departureDate: new Date(flightData.times.sched_out * 1000),
-            departureTime: new Date(flightData.times.sched_out * 1000),
+            departureDate: new Date(flightData.times.sched_out * 1000).toISOString(),
+            departureTime: new Date(flightData.times.sched_out * 1000).toISOString(),
             aircraftType: flightData.aircraft.iata_code,
             registration: flightData.aircraft.reg,
             flightNumber: flightData.general.icao_airline+flightData.general.flight_number,
@@ -141,8 +239,6 @@ export async function createFlight({flightData, usernameSimbrief}:{flightData:an
         }
     )
 
-    console.log(JSON.parse(JSON.stringify(newFlight._id)))
-    
     console.log("usernameSimbrief: ", usernameSimbrief)
     
     await updateUserWithFlightData(usernameSimbrief, newFlight._id)
@@ -152,17 +248,22 @@ export async function createFlight({flightData, usernameSimbrief}:{flightData:an
     if (updatedWnB.status === "success") {
 
         await Flight.findOneAndUpdate(newFlight._id, {
-            zfwi: updatedWnB.zfwIndex!,
-            zfwmac: updatedWnB.zfwMac!,
-            towi: updatedWnB.towIndex!,
-            towmac: updatedWnB.towMac!,
-            paxCount_F: updatedWnB.paxF!,
-            paxCount_C: updatedWnB.paxC!,
-            paxCount_Y: updatedWnB.paxY!,
-        })
+                zfwi: updatedWnB.zfwIndex!,
+                zfwmac: updatedWnB.zfwMac!,
+                towi: updatedWnB.towIndex!,
+                towmac: updatedWnB.towMac!,
+                paxCount_F: updatedWnB.paxF!,
+                paxCount_C: updatedWnB.paxC!,
+                paxCount_Y: updatedWnB.paxY!,
+                fwd_hold_uld: updatedWnB.fwd_hold_uld,
+                aft_hold_uld: updatedWnB.aft_hold_uld,
+                blk_hold_uld: updatedWnB.blk_hold_uld,
+            },
+            {new: true},
+        )
     }
-
-    return JSON.parse(JSON.stringify(newFlight))
+    console.log("newFlight: ", newFlight)
+    return newFlight
 
     } catch (error) {
         handleError(error)
@@ -176,8 +277,8 @@ export async function updateFlight({flightData, usernameSimbrief, _id}:{flightDa
         const updatedFlight = await Flight.findOneAndUpdate({_id}, {
             origin: flightData.origin.iata_code,
             destination: flightData.destination.iata_code,
-            departureDate: new Date(flightData.times.sched_out * 1000),
-            departureTime: new Date(flightData.times.sched_out * 1000),
+            departureDate: new Date(flightData.times.sched_out * 1000).toISOString(),
+            departureTime: new Date(flightData.times.sched_out * 1000).toISOString(),
             aircraftType: flightData.aircraft.iata_code,
             registration: flightData.aircraft.reg,
             flightNumber: flightData.general.icao_airline+flightData.general.flight_number,
@@ -206,26 +307,34 @@ export async function updateFlight({flightData, usernameSimbrief, _id}:{flightDa
             units: flightData.params.units,
         }, {new: true})
 
-        // await calcWnB(_id)
         const updatedWnB = await calcWnB(_id)
 
         if (updatedWnB.status === "success") {
 
             await Flight.findOneAndUpdate({_id}, {
-                zfwi: updatedWnB.zfwIndex!,
-                zfwmac: updatedWnB.zfwMac!,
-                towi: updatedWnB.towIndex!,
-                towmac: updatedWnB.towMac!,
-                paxCount_F: updatedWnB.paxF!,
-                paxCount_C: updatedWnB.paxC!,
-                paxCount_Y: updatedWnB.paxY!,
-            })
+                    zfwi: updatedWnB.zfwIndex!,
+                    zfwmac: updatedWnB.zfwMac!,
+                    towi: updatedWnB.towIndex!,
+                    towmac: updatedWnB.towMac!,
+                    paxCount_F: updatedWnB.paxF!,
+                    paxCount_C: updatedWnB.paxC!,
+                    paxCount_Y: updatedWnB.paxY!,
+                    fwd_hold: updatedWnB.fwdHld!,
+                    aft_hold: updatedWnB.aftHld!,
+                    blk_hold: updatedWnB.blkHld!,
+                    fwd_hold_uld: updatedWnB.fwd_hold_uld,
+                    aft_hold_uld: updatedWnB.aft_hold_uld,
+                    blk_hold_uld: updatedWnB.blk_hold_uld,
+                },
+                {new: true},
+            )
         }
-        
-        return JSON.parse(JSON.stringify(updatedFlight))
+        console.log("updatedFlight: ", updatedFlight)
+        return updatedFlight
+
         
     } catch (error) {
+        console.error("Error updating flight:", error);
         handleError(error)
     }
-
 }

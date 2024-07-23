@@ -9,11 +9,9 @@ import { aircraft } from "@/constants/aircraftindex"
 
 import Flight from "../database/models/flight.model"
 import { fuelIndex_77W } from "@/constants/fuelindex"
+import { loadDistribution } from "./loaddistribution.actions"
 
 export async function calcWnB(id: string) {
-    
-    console.log("_id: ", id)
-
     try {
         
         await connectToDatabase()
@@ -92,6 +90,8 @@ export async function calcWnB(id: string) {
         console.log("ZFWi: ", zfwDetails!.index, "MAC ZFW: ", zfwDetails!.mac)
         console.log("TOWi: ", towDetails!.index, "MAC TOW: ", towDetails!.mac)
         
+        const loadData = await loadDistribution(id)
+
         return{
             status:"success",
             paxF: ttlPax_F,
@@ -104,7 +104,10 @@ export async function calcWnB(id: string) {
             zfwIndex: zfwDetails!.index,
             zfwMac: zfwDetails!.mac,
             towIndex: towDetails!.index,
-            towMac: towDetails!.mac
+            towMac: towDetails!.mac,
+            fwd_hold_uld: loadData.fwdHldUlds.toString(),
+            aft_hold_uld: loadData.aftHldUlds.toString(),
+            blk_hold_uld: loadData.blkHldUlds.toString(),
         }
 
     } catch (error) {
@@ -148,7 +151,8 @@ export async function calculateZFWindex(flightData:any, f:string, c:string, y:st
 
     console.log(indexBlkHld)
 
-    var doi = flightData.doi / 100
+    //CALCULATE ZFW INDEX
+    var doi = parseFloat(flightData.doi)
     
     var zfwIndex = doi + indexF + indexC + indexY + indexFwdHld + indexAftHld + indexBlkHld
 
@@ -160,7 +164,6 @@ export async function calculateZFWindex(flightData:any, f:string, c:string, y:st
     console.log(macZFW.toFixed(1))
 
     return({index: zfwIndex.toFixed(2), mac: macZFW.toFixed(1)})
-    // await calculateTOWindex(flightData, zfwIndex.toFixed(2))
 }
 
 export async function calculateTOWindex(flightData:any, zfwIndex:string) {
