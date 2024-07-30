@@ -25,7 +25,7 @@ export async function getUserById(userId: string) {
     try {
         await connectToDatabase()
 
-        const user = await User.findOne({ clerkId: userId})
+        const user = await User.findOne({ clerkId: userId })
 
         if (!user) throw new Error("User not found")
 
@@ -45,6 +45,17 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
         if (!updatedUser) throw new Error("User update failed")
 
         return JSON.parse(JSON.stringify(updatedUser))
+    } catch (error) {
+        handleError(error)
+    }
+}
+
+// GET USER'S SIMBRIEFUSERNAME FROM DB
+export async function checkSimbriefUsername() {
+    
+    try {
+        
+        await connectToDatabase()
     } catch (error) {
         handleError(error)
     }

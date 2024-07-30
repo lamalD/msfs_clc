@@ -1,14 +1,17 @@
+'use client'
+
 import React from 'react'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import Link from 'next/link'
 import InitFlight from '@/components/InitFlight'
 import Loadplan from '@/components/Loadplan'
 import Loadsheet from '@/components/Loadsheet'
 import Messages from '@/components/Messages'
 
+
 const Flight = () => {
+
   return (
     <div className='flex flex-col w-full bg-black-2'>
       <Tabs defaultValue="initflight" className="w-full">

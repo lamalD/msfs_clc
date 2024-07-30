@@ -2158,4 +2158,2224 @@ export const operators = [
         icao_code: "IWY",
         name: "",
     },
+    {
+        iata_code: "K5",
+        icao_code: "SQH",
+        name: "",
+    },
+    {
+        iata_code: "K6",
+        icao_code: "KHV",
+        name: "",
+    },
+    {
+        iata_code: "K7",
+        icao_code: "KBZ",
+        name: "",
+    },
+    {
+        iata_code: "K8",
+        icao_code: "KND",
+        name: "",
+    },
+    {
+        iata_code: "K9",
+        icao_code: "KFS",
+        name: "",
+    },
+    {
+        iata_code: "KA",
+        icao_code: "HDA",
+        name: "",
+    },
+    {
+        iata_code: "KB",
+        icao_code: "DRK",
+        name: "",
+    },
+    {
+        iata_code: "KC",
+        icao_code: "KZR",
+        name: "",
+    },
+    {
+        iata_code: "KD",
+        icao_code: "WGN",
+        name: "",
+    },
+    {
+        iata_code: "KE",
+        icao_code: "KAL",
+        name: "",
+    },
+    {
+        iata_code: "KF",
+        icao_code: "ABB",
+        name: "",
+    },
+    {
+        iata_code: "KG",
+        icao_code: "GTV",
+        name: "",
+    },
+    {
+        iata_code: "KH",
+        icao_code: "AAH",
+        name: "",
+    },
+    {
+        iata_code: "KJ",
+        icao_code: "IAH",
+        name: "",
+    },
+    {
+        iata_code: "KK",
+        icao_code: "KKK",
+        name: "",
+    },
+    {
+        iata_code: "KL",
+        icao_code: "KLM",
+        name: "",
+    },
+    {
+        iata_code: "KM",
+        icao_code: "AMC",
+        name: "",
+    },
+    {
+        iata_code: "KN",
+        icao_code: "CUA",
+        name: "",
+    },
+    {
+        iata_code: "KO",
+        icao_code: "KMA",
+        name: "",
+    },
+    {
+        iata_code: "KP",
+        icao_code: "SKK",
+        name: "",
+    },
+    {
+        iata_code: "KQ",
+        icao_code: "KQA",
+        name: "",
+    },
+    {
+        iata_code: "KR",
+        icao_code: "EAA",
+        name: "",
+    },
+    {
+        iata_code: "KS",
+        icao_code: "PEN",
+        name: "",
+    },
+    {
+        iata_code: "KU",
+        icao_code: "KAC",
+        name: "",
+    },
+    {
+        iata_code: "KV",
+        icao_code: "SKV",
+        name: "",
+    },
+    {
+        iata_code: "KX",
+        icao_code: "CAY",
+        name: "",
+    },
+    {
+        iata_code: "KY",
+        icao_code: "KNA",
+        name: "",
+    },
+    {
+        iata_code: "KZ",
+        icao_code: "NCA",
+        name: "",
+    },
+    {
+        iata_code: "L5",
+        icao_code: "TLB",
+        name: "",
+    },
+    {
+        iata_code: "L7",
+        icao_code: "LHS",
+        name: "",
+    },
+    {
+        iata_code: "L9",
+        icao_code: "BAL",
+        name: "",
+    },
+    {
+        iata_code: "LA",
+        icao_code: "LAN",
+        name: "",
+    },
+    {
+        iata_code: "LC",
+        icao_code: "PTI",
+        name: "",
+    },
+    {
+        iata_code: "LF",
+        icao_code: "VTE",
+        name: "",
+    },
+    {
+        iata_code: "LG",
+        icao_code: "LGL",
+        name: "",
+    },
+    {
+        iata_code: "LH",
+        icao_code: "GEC",
+        name: "",
+    },
+    {
+        iata_code: "LH",
+        icao_code: "DLH",
+        name: "",
+    },
+    {
+        iata_code: "LI",
+        icao_code: "LIA",
+        name: "",
+    },
+    {
+        iata_code: "LJ",
+        icao_code: "JNA",
+        name: "",
+    },
+    {
+        iata_code: "LK",
+        icao_code: "LLL",
+        name: "",
+    },
+    {
+        iata_code: "LL",
+        icao_code: "BSK",
+        name: "",
+    },
+    {
+        iata_code: "LN",
+        icao_code: "LAA",
+        name: "",
+    },
+    {
+        iata_code: "LO",
+        icao_code: "LOT",
+        name: "",
+    },
+    {
+        iata_code: "LP",
+        icao_code: "LPE",
+        name: "",
+    },
+    {
+        iata_code: "LQ",
+        icao_code: "MKR",
+        name: "",
+    },
+    {
+        iata_code: "LR",
+        icao_code: "LRC",
+        name: "",
+    },
+    {
+        iata_code: "LS",
+        icao_code: "EXS",
+        name: "",
+    },
+    {
+        iata_code: "LT",
+        icao_code: "SNG",
+        name: "",
+    },
+    {
+        iata_code: "LU",
+        icao_code: "LXP",
+        name: "",
+    },
+    {
+        iata_code: "LW",
+        icao_code: "ANV",
+        name: "",
+    },
+    {
+        iata_code: "LX",
+        icao_code: "SWR",
+        name: "",
+    },
+    {
+        iata_code: "LY",
+        icao_code: "ELY",
+        name: "",
+    },
+    {
+        iata_code: "LZ",
+        icao_code: "SWU",
+        name: "",
+    },
+    {
+        iata_code: "M0",
+        icao_code: "MNG",
+        name: "",
+    },
+    {
+        iata_code: "M3",
+        icao_code: "NFA",
+        name: "",
+    },
+    {
+        iata_code: "M4",
+        icao_code: "MSA",
+        name: "",
+    },
+    {
+        iata_code: "M5",
+        icao_code: "KEN",
+        name: "",
+    },
+    {
+        iata_code: "M6",
+        icao_code: "AJT",
+        name: "",
+    },
+    {
+        iata_code: "M8",
+        icao_code: "MSJ",
+        name: "",
+    },
+    {
+        iata_code: "MB",
+        icao_code: "MNB",
+        name: "",
+    },
+    {
+        iata_code: "MD",
+        icao_code: "MDG",
+        name: "",
+    },
+    {
+        iata_code: "ME",
+        icao_code: "MEA",
+        name: "",
+    },
+    {
+        iata_code: "MF",
+        icao_code: "CXA",
+        name: "",
+    },
+    {
+        iata_code: "MG",
+        icao_code: "MGD",
+        name: "",
+    },
+    {
+        iata_code: "MH",
+        icao_code: "MAS",
+        name: "",
+    },
+    {
+        iata_code: "MI",
+        icao_code: "SLK",
+        name: "",
+    },
+    {
+        iata_code: "MJ",
+        icao_code: "MLR",
+        name: "",
+    },
+    {
+        iata_code: "MK",
+        icao_code: "MAU",
+        name: "",
+    },
+    {
+        iata_code: "ML",
+        icao_code: "FML",
+        name: "",
+    },
+    {
+        iata_code: "MM",
+        icao_code: "APJ",
+        name: "",
+    },
+    {
+        iata_code: "MN",
+        icao_code: "CAW",
+        name: "",
+    },
+    {
+        iata_code: "MO",
+        icao_code: "CAV",
+        name: "",
+    },
+    {
+        iata_code: "MP",
+        icao_code: "MPH",
+        name: "",
+    },
+    {
+        iata_code: "MQ",
+        icao_code: "ENY",
+        name: "",
+    },
+    {
+        iata_code: "MR",
+        icao_code: "MML",
+        name: "",
+    },
+    {
+        iata_code: "MS",
+        icao_code: "MSR",
+        name: "",
+    },
+    {
+        iata_code: "MT",
+        icao_code: "TCX",
+        name: "",
+    },
+    {
+        iata_code: "MU",
+        icao_code: "CES",
+        name: "",
+    },
+    {
+        iata_code: "MV",
+        icao_code: "MAR",
+        name: "",
+    },
+    {
+        iata_code: "MW",
+        icao_code: "MKL",
+        name: "",
+    },
+    {
+        iata_code: "MX",
+        icao_code: "MXY",
+        name: "",
+    },
+    {
+        iata_code: "MY",
+        icao_code: "MWG",
+        name: "",
+    },
+    {
+        iata_code: "MZ",
+        icao_code: "AHY",
+        name: "",
+    },
+    {
+        iata_code: "N0",
+        icao_code: "NBT",
+        name: "",
+    },
+    {
+        iata_code: "N4",
+        icao_code: "NWS",
+        name: "",
+    },
+    {
+        iata_code: "N5",
+        icao_code: "NRL",
+        name: "",
+    },
+    {
+        iata_code: "N7",
+        icao_code: "WBA",
+        name: "",
+    },
+    {
+        iata_code: "N8",
+        icao_code: "MUA",
+        name: "",
+    },
+    {
+        iata_code: "N9",
+        icao_code: "NVR",
+        name: "",
+    },
+    {
+        iata_code: "NA",
+        icao_code: "NSS",
+        name: "",
+    },
+    {
+        iata_code: "NB",
+        icao_code: "EAN",
+        name: "",
+    },
+    {
+        iata_code: "NC",
+        icao_code: "JTE",
+        name: "",
+    },
+    {
+        iata_code: "ND",
+        icao_code: "FMI",
+        name: "",
+    },
+    {
+        iata_code: "NE",
+        icao_code: "NMA",
+        name: "",
+    },
+    {
+        iata_code: "NF",
+        icao_code: "AVN",
+        name: "",
+    },
+    {
+        iata_code: "NG",
+        icao_code: "NAI",
+        name: "",
+    },
+    {
+        iata_code: "NH",
+        icao_code: "ANA",
+        name: "",
+    },
+    {
+        iata_code: "NI",
+        icao_code: "PGA",
+        name: "",
+    },
+    {
+        iata_code: "NK",
+        icao_code: "NKS",
+        name: "",
+    },
+    {
+        iata_code: "NL",
+        icao_code: "AEH",
+        name: "",
+    },
+    {
+        iata_code: "NN",
+        icao_code: "MOV",
+        name: "",
+    },
+    {
+        iata_code: "NO",
+        icao_code: "NOS",
+        name: "",
+    },
+    {
+        iata_code: "NP",
+        icao_code: "NIA",
+        name: "",
+    },
+    {
+        iata_code: "NQ",
+        icao_code: "AJX",
+        name: "",
+    },
+    {
+        iata_code: "NR",
+        icao_code: "MAV",
+        name: "",
+    },
+    {
+        iata_code: "NT",
+        icao_code: "IBB",
+        name: "",
+    },
+    {
+        iata_code: "NU",
+        icao_code: "JTA",
+        name: "",
+    },
+    {
+        iata_code: "NV",
+        icao_code: "IRG",
+        name: "",
+    },
+    {
+        iata_code: "NW",
+        icao_code: "NWA",
+        name: "",
+    },
+    {
+        iata_code: "NX",
+        icao_code: "AMU",
+        name: "",
+    },
+    {
+        iata_code: "NY",
+        icao_code: "FXI",
+        name: "",
+    },
+    {
+        iata_code: "NZ",
+        icao_code: "ANZ",
+        name: "",
+    },
+    {
+        iata_code: "O5",
+        icao_code: "KMZ",
+        name: "",
+    },
+    {
+        iata_code: "O9",
+        icao_code: "NOV",
+        name: "",
+    },
+    {
+        iata_code: "OA",
+        icao_code: "OAL",
+        name: "",
+    },
+    {
+        iata_code: "OB",
+        icao_code: "BOV",
+        name: "",
+    },
+    {
+        iata_code: "OC",
+        icao_code: "NGK",
+        name: "",
+    },
+    {
+        iata_code: "OE",
+        icao_code: "LDM",
+        name: "",
+    },
+    {
+        iata_code: "OF",
+        icao_code: "OLA",
+        name: "",
+    },
+    {
+        iata_code: "OG",
+        icao_code: "AFN",
+        name: "",
+    },
+    {
+        iata_code: "OH",
+        icao_code: "JIA",
+        name: "",
+    },
+    {
+        iata_code: "OI",
+        icao_code: "HND",
+        name: "",
+    },
+    {
+        iata_code: "OJ",
+        icao_code: "FJM",
+        name: "",
+    },
+    {
+        iata_code: "OK",
+        icao_code: "CSA",
+        name: "",
+    },
+    {
+        iata_code: "OL",
+        icao_code: "PAO",
+        name: "",
+    },
+    {
+        iata_code: "OM",
+        icao_code: "MGL",
+        name: "",
+    },
+    {
+        iata_code: "ON",
+        icao_code: "RON",
+        name: "",
+    },
+    {
+        iata_code: "OO",
+        icao_code: "SKW",
+        name: "",
+    },
+    {
+        iata_code: "OP",
+        icao_code: "PPL",
+        name: "",
+    },
+    {
+        iata_code: "OR",
+        icao_code: "TFL",
+        name: "",
+    },
+    {
+        iata_code: "OS",
+        icao_code: "AUA",
+        name: "",
+    },
+    {
+        iata_code: "OT",
+        icao_code: "CDO",
+        name: "",
+    },
+    {
+        iata_code: "OU",
+        icao_code: "CTN",
+        name: "",
+    },
+    {
+        iata_code: "OV",
+        icao_code: "OMS",
+        name: "",
+    },
+    {
+        iata_code: "OW",
+        icao_code: "SEW",
+        name: "",
+    },
+    {
+        iata_code: "OX",
+        icao_code: "OEA",
+        name: "",
+    },
+    {
+        iata_code: "OY",
+        icao_code: "ANS",
+        name: "",
+    },
+    {
+        iata_code: "OZ",
+        icao_code: "AAR",
+        name: "",
+    },
+    {
+        iata_code: "P0",
+        icao_code: "PFZ",
+        name: "",
+    },
+    {
+        iata_code: "P2",
+        icao_code: "XAK",
+        name: "",
+    },
+    {
+        iata_code: "P3",
+        icao_code: "CLU",
+        name: "",
+    },
+    {
+        iata_code: "P4",
+        icao_code: "NSO",
+        name: "",
+    },
+    {
+        iata_code: "P5",
+        icao_code: "RPB",
+        name: "",
+    },
+    {
+        iata_code: "P6",
+        icao_code: "PSC",
+        name: "",
+    },
+    {
+        iata_code: "P8",
+        icao_code: "SRN",
+        name: "",
+    },
+    {
+        iata_code: "P9",
+        icao_code: "PVN",
+        name: "",
+    },
+    {
+        iata_code: "PA",
+        icao_code: "ABQ",
+        name: "",
+    },
+    {
+        iata_code: "PB",
+        icao_code: "SPR",
+        name: "",
+    },
+    {
+        iata_code: "PC",
+        icao_code: "PGT",
+        name: "",
+    },
+    {
+        iata_code: "PD",
+        icao_code: "POE",
+        name: "",
+    },
+    {
+        iata_code: "PE",
+        icao_code: "PEV",
+        name: "",
+    },
+    {
+        iata_code: "PF",
+        icao_code: "PRI",
+        name: "",
+    },
+    {
+        iata_code: "PG",
+        icao_code: "BKP",
+        name: "",
+    },
+    {
+        iata_code: "PI",
+        icao_code: "RKA",
+        name: "",
+    },
+    {
+        iata_code: "PK",
+        icao_code: "PIA",
+        name: "",
+    },
+    {
+        iata_code: "PM",
+        icao_code: "CNF",
+        name: "",
+    },
+    {
+        iata_code: "PO",
+        icao_code: "PAC",
+        name: "",
+    },
+    {
+        iata_code: "PP",
+        icao_code: "PJS",
+        name: "",
+    },
+    {
+        iata_code: "PQ",
+        icao_code: "APG",
+        name: "",
+    },
+    {
+        iata_code: "PR",
+        icao_code: "PAL",
+        name: "",
+    },
+    {
+        iata_code: "PS",
+        icao_code: "AUI",
+        name: "",
+    },
+    {
+        iata_code: "PT",
+        icao_code: "PDT",
+        name: "",
+    },
+    {
+        iata_code: "PV",
+        icao_code: "SBU",
+        name: "",
+    },
+    {
+        iata_code: "PW",
+        icao_code: "PRF",
+        name: "",
+    },
+    {
+        iata_code: "PX",
+        icao_code: "ANG",
+        name: "",
+    },
+    {
+        iata_code: "PY",
+        icao_code: "SLM",
+        name: "",
+    },
+    {
+        iata_code: "PZ",
+        icao_code: "LAP",
+        name: "",
+    },
+    {
+        iata_code: "Q2",
+        icao_code: "DQA",
+        name: "",
+    },
+    {
+        iata_code: "Q3",
+        icao_code: "AXL",
+        name: "",
+    },
+    {
+        iata_code: "Q5",
+        icao_code: "MLA",
+        name: "",
+    },
+    {
+        iata_code: "Q7",
+        icao_code: "SBM",
+        name: "",
+    },
+    {
+        iata_code: "Q8",
+        icao_code: "TSG",
+        name: "",
+    },
+    {
+        iata_code: "QA",
+        icao_code: "CIM",
+        name: "",
+    },
+    {
+        iata_code: "QB",
+        icao_code: "IRQ",
+        name: "",
+    },
+    {
+        iata_code: "QC",
+        icao_code: "CRC",
+        name: "",
+    },
+    {
+        iata_code: "QD",
+        icao_code: "DOB",
+        name: "",
+    },
+    {
+        iata_code: "QE",
+        icao_code: "QFZ",
+        name: "",
+    },
+    {
+        iata_code: "QF",
+        icao_code: "QFA",
+        name: "",
+    },
+    {
+        iata_code: "QG",
+        icao_code: "CTV",
+        name: "",
+    },
+    {
+        iata_code: "QH",
+        icao_code: "BAV",
+        name: "",
+    },
+    {
+        iata_code: "QJ",
+        icao_code: "LTP",
+        name: "",
+    },
+    {
+        iata_code: "QK",
+        icao_code: "JZA",
+        name: "",
+    },
+    {
+        iata_code: "QL",
+        icao_code: "LER",
+        name: "",
+    },
+    {
+        iata_code: "QN",
+        icao_code: "SKP",
+        name: "",
+    },
+    {
+        iata_code: "QQ",
+        icao_code: "FWQ",
+        name: "",
+    },
+    {
+        iata_code: "QR",
+        icao_code: "QTR",
+        name: "",
+    },
+    {
+        iata_code: "QS",
+        icao_code: "TVS",
+        name: "",
+    },
+    {
+        iata_code: "QT",
+        icao_code: "TPA",
+        name: "",
+    },
+    {
+        iata_code: "QU",
+        icao_code: "UTN",
+        name: "",
+    },
+    {
+        iata_code: "QV",
+        icao_code: "LAO",
+        name: "",
+    },
+    {
+        iata_code: "QX",
+        icao_code: "QXE",
+        name: "",
+    },
+    {
+        iata_code: "QZ",
+        icao_code: "AWQ",
+        name: "",
+    },
+    {
+        iata_code: "R2",
+        icao_code: "GTS",
+        name: "",
+    },
+    {
+        iata_code: "R3",
+        icao_code: "SYL",
+        name: "",
+    },
+    {
+        iata_code: "R4",
+        icao_code: "RLT",
+        name: "",
+    },
+    {
+        iata_code: "R5",
+        icao_code: "JAV",
+        name: "",
+    },
+    {
+        iata_code: "R6",
+        icao_code: "DNU",
+        name: "",
+    },
+    {
+        iata_code: "R7",
+        icao_code: "OCA",
+        name: "",
+    },
+    {
+        iata_code: "R8",
+        icao_code: "KGA",
+        name: "",
+    },
+    {
+        iata_code: "R9",
+        icao_code: "TSD",
+        name: "",
+    },
+    {
+        iata_code: "RA",
+        icao_code: "RNA",
+        name: "",
+    },
+    {
+        iata_code: "RB",
+        icao_code: "SYR",
+        name: "",
+    },
+    {
+        iata_code: "RC",
+        icao_code: "FLI",
+        name: "",
+    },
+    {
+        iata_code: "RE",
+        icao_code: "STK",
+        name: "",
+    },
+    {
+        iata_code: "RF",
+        icao_code: "EOK",
+        name: "",
+    },
+    {
+        iata_code: "RG",
+        icao_code: "RJD",
+        name: "",
+    },
+    {
+        iata_code: "RI",
+        icao_code: "MDL",
+        name: "",
+    },
+    {
+        iata_code: "RJ",
+        icao_code: "RJA",
+        name: "",
+    },
+    {
+        iata_code: "RL",
+        icao_code: "ABG",
+        name: "",
+    },
+    {
+        iata_code: "RM",
+        icao_code: "NGT",
+        name: "",
+    },
+    {
+        iata_code: "RN",
+        icao_code: "RKT",
+        name: "",
+    },
+    {
+        iata_code: "RO",
+        icao_code: "ROT",
+        name: "",
+    },
+    {
+        iata_code: "RP",
+        icao_code: "CHQ",
+        name: "",
+    },
+    {
+        iata_code: "RQ",
+        icao_code: "KMF",
+        name: "",
+    },
+    {
+        iata_code: "RR",
+        icao_code: "RFR",
+        name: "",
+    },
+    {
+        iata_code: "RS",
+        icao_code: "ASV",
+        name: "",
+    },
+    {
+        iata_code: "RT",
+        icao_code: "RAT",
+        name: "",
+    },
+    {
+        iata_code: "RU",
+        icao_code: "SKI",
+        name: "",
+    },
+    {
+        iata_code: "RW",
+        icao_code: "RYL",
+        name: "",
+    },
+    {
+        iata_code: "RX",
+        icao_code: "RGE",
+        name: "",
+    },
+    {
+        iata_code: "RY",
+        icao_code: "CJX",
+        name: "",
+    },
+    {
+        iata_code: "RZ",
+        icao_code: "LRS",
+        name: "",
+    },
+    {
+        iata_code: "S0",
+        icao_code: "NSO",
+        name: "",
+    },
+    {
+        iata_code: "S1",
+        icao_code: "LSY",
+        name: "",
+    },
+    {
+        iata_code: "S2",
+        icao_code: "RSH",
+        name: "",
+    },
+    {
+        iata_code: "S3",
+        icao_code: "BBR",
+        name: "",
+    },
+    {
+        iata_code: "S4",
+        icao_code: "RZO",
+        name: "",
+    },
+    {
+        iata_code: "S5",
+        icao_code: "TCF",
+        name: "",
+    },
+    {
+        iata_code: "S6",
+        icao_code: "SNR",
+        name: "",
+    },
+    {
+        iata_code: "S7",
+        icao_code: "SBI",
+        name: "",
+    },
+    {
+        iata_code: "S8",
+        icao_code: "SDA",
+        name: "",
+    },
+    {
+        iata_code: "S9",
+        icao_code: "IKM",
+        name: "",
+    },
+    {
+        iata_code: "SA",
+        icao_code: "SAA",
+        name: "",
+    },
+    {
+        iata_code: "SB",
+        icao_code: "ACI",
+        name: "",
+    },
+    {
+        iata_code: "SC",
+        icao_code: "CDG",
+        name: "",
+    },
+    {
+        iata_code: "SD",
+        icao_code: "SUD",
+        name: "",
+    },
+    {
+        iata_code: "SF",
+        icao_code: "DTH",
+        name: "",
+    },
+    {
+        iata_code: "SG",
+        icao_code: "SEJ",
+        name: "",
+    },
+    {
+        iata_code: "SI",
+        icao_code: "BCI",
+        name: "",
+    },
+    {
+        iata_code: "SJ",
+        icao_code: "SJY",
+        name: "",
+    },
+    {
+        iata_code: "SK",
+        icao_code: "SAS",
+        name: "",
+    },
+    {
+        iata_code: "SL",
+        icao_code: "TLM",
+        name: "",
+    },
+    {
+        iata_code: "SM",
+        icao_code: "MSC",
+        name: "",
+    },
+    {
+        iata_code: "SN",
+        icao_code: "BEL",
+        name: "",
+    },
+    {
+        iata_code: "SP",
+        icao_code: "RZO",
+        name: "",
+    },
+    {
+        iata_code: "SQ",
+        icao_code: "SIA",
+        name: "",
+    },
+    {
+        iata_code: "SQ",
+        icao_code: "SQC",
+        name: "",
+    },
+    {
+        iata_code: "SR",
+        icao_code: "SDR",
+        name: "",
+    },
+    {
+        iata_code: "SS",
+        icao_code: "CRL",
+        name: "",
+    },
+    {
+        iata_code: "ST",
+        icao_code: "GMI",
+        name: "",
+    },
+    {
+        iata_code: "SU",
+        icao_code: "AFL",
+        name: "",
+    },
+    {
+        iata_code: "SV",
+        icao_code: "SVA",
+        name: "",
+    },
+    {
+        iata_code: "SW",
+        icao_code: "NMB",
+        name: "",
+    },
+    {
+        iata_code: "SX",
+        icao_code: "SRK",
+        name: "",
+    },
+    {
+        iata_code: "SY",
+        icao_code: "SCX",
+        name: "",
+    },
+    {
+        iata_code: "SZ",
+        icao_code: "SMR",
+        name: "",
+    },
+    {
+        iata_code: "T0",
+        icao_code: "TPU",
+        name: "",
+    },
+    {
+        iata_code: "T2",
+        icao_code: "FLB",
+        name: "",
+    },
+    {
+        iata_code: "T3",
+        icao_code: "EZE",
+        name: "",
+    },
+    {
+        iata_code: "T5",
+        icao_code: "TUA",
+        name: "",
+    },
+    {
+        iata_code: "T6",
+        icao_code: "ITI",
+        name: "",
+    },
+    {
+        iata_code: "T7",
+        icao_code: "TJT",
+        name: "",
+    },
+    {
+        iata_code: "TA",
+        icao_code: "TAI",
+        name: "",
+    },
+    {
+        iata_code: "TB",
+        icao_code: "JAF",
+        name: "",
+    },
+    {
+        iata_code: "TC",
+        icao_code: "ATC",
+        name: "",
+    },
+    {
+        iata_code: "TE",
+        icao_code: "IGA",
+        name: "",
+    },
+    {
+        iata_code: "TF",
+        icao_code: "SCW",
+        name: "",
+    },
+    {
+        iata_code: "TG",
+        icao_code: "THA",
+        name: "",
+    },
+    {
+        iata_code: "TH",
+        icao_code: "RMY",
+        name: "",
+    },
+    {
+        iata_code: "TI",
+        icao_code: "TWI",
+        name: "",
+    },
+    {
+        iata_code: "TJ",
+        icao_code: "GPD",
+        name: "",
+    },
+    {
+        iata_code: "TK",
+        icao_code: "THY",
+        name: "",
+    },
+    {
+        iata_code: "TL",
+        icao_code: "ANO",
+        name: "",
+    },
+    {
+        iata_code: "TM",
+        icao_code: "LAN",
+        name: "",
+    },
+    {
+        iata_code: "TN",
+        icao_code: "THT",
+        name: "",
+    },
+    {
+        iata_code: "TO",
+        icao_code: "TVF",
+        name: "",
+    },
+    {
+        iata_code: "TP",
+        icao_code: "TAP",
+        name: "",
+    },
+    {
+        iata_code: "TQ",
+        icao_code: "TDM",
+        name: "",
+    },
+    {
+        iata_code: "TR",
+        icao_code: "SCO",
+        name: "",
+    },
+    {
+        iata_code: "TS",
+        icao_code: "TSC",
+        name: "",
+    },
+    {
+        iata_code: "TT",
+        icao_code: "TGW",
+        name: "",
+    },
+    {
+        iata_code: "TU",
+        icao_code: "TAR",
+        name: "",
+    },
+    {
+        iata_code: "TV",
+        icao_code: "TBA",
+        name: "",
+    },
+    {
+        iata_code: "TW",
+        icao_code: "TWB",
+        name: "",
+    },
+    {
+        iata_code: "TX",
+        icao_code: "FWI",
+        name: "",
+    },
+    {
+        iata_code: "TY",
+        icao_code: "TPC",
+        name: "",
+    },
+    {
+        iata_code: "U2",
+        icao_code: "EZY",
+        name: "",
+    },
+    {
+        iata_code: "U3",
+        icao_code: "AIA",
+        name: "",
+    },
+    {
+        iata_code: "U4",
+        icao_code: "BHA",
+        name: "",
+    },
+    {
+        iata_code: "U6",
+        icao_code: "SVR",
+        name: "",
+    },
+    {
+        iata_code: "U8",
+        icao_code: "CYF",
+        name: "",
+    },
+    {
+        iata_code: "UA",
+        icao_code: "UAL",
+        name: "",
+    },
+    {
+        iata_code: "UB",
+        icao_code: "UBA",
+        name: "",
+    },
+    {
+        iata_code: "UC",
+        icao_code: "LCO",
+        name: "",
+    },
+    {
+        iata_code: "UD",
+        icao_code: "HER",
+        name: "",
+    },
+    {
+        iata_code: "UF",
+        icao_code: "UKM",
+        name: "",
+    },
+    {
+        iata_code: "UH",
+        icao_code: "UJX",
+        name: "",
+    },
+    {
+        iata_code: "UI",
+        icao_code: "AUK",
+        name: "",
+    },
+    {
+        iata_code: "UJ",
+        icao_code: "LMU",
+        name: "",
+    },
+    {
+        iata_code: "UK",
+        icao_code: "VTI",
+        name: "",
+    },
+    {
+        iata_code: "UL",
+        icao_code: "ALK",
+        name: "",
+    },
+    {
+        iata_code: "UM",
+        icao_code: "AZW",
+        name: "",
+    },
+    {
+        iata_code: "UN",
+        icao_code: "TSO",
+        name: "",
+    },
+    {
+        iata_code: "UO",
+        icao_code: "HKE",
+        name: "",
+    },
+    {
+        iata_code: "UP",
+        icao_code: "BHS",
+        name: "",
+    },
+    {
+        iata_code: "UR",
+        icao_code: "UGD",
+        name: "",
+    },
+    {
+        iata_code: "US",
+        icao_code: "AWE",
+        name: "",
+    },
+    {
+        iata_code: "UT",
+        icao_code: "UTA",
+        name: "",
+    },
+    {
+        iata_code: "UU",
+        icao_code: "REU",
+        name: "",
+    },
+    {
+        iata_code: "UX",
+        icao_code: "AEA",
+        name: "",
+    },
+    {
+        iata_code: "UY",
+        icao_code: "SPD",
+        name: "",
+    },
+    {
+        iata_code: "UZ",
+        icao_code: "BRQ",
+        name: "",
+    },
+    {
+        iata_code: "V0",
+        icao_code: "VCV",
+        name: "",
+    },
+    {
+        iata_code: "V2",
+        icao_code: "RBY",
+        name: "",
+    },
+    {
+        iata_code: "V3",
+        icao_code: "KRP",
+        name: "",
+    },
+    {
+        iata_code: "V4",
+        icao_code: "VES",
+        name: "",
+    },
+    {
+        iata_code: "V5",
+        icao_code: "DAP",
+        name: "",
+    },
+    {
+        iata_code: "V7",
+        icao_code: "VOE",
+        name: "",
+    },
+    {
+        iata_code: "V8",
+        icao_code: "IAR",
+        name: "",
+    },
+    {
+        iata_code: "VA",
+        icao_code: "VOZ",
+        name: "",
+    },
+    {
+        iata_code: "VB",
+        icao_code: "VIV",
+        name: "",
+    },
+    {
+        iata_code: "VC",
+        icao_code: "SRY",
+        name: "",
+    },
+    {
+        iata_code: "VE",
+        icao_code: "EFY",
+        name: "",
+    },
+    {
+        iata_code: "VF",
+        icao_code: "FBB",
+        name: "",
+    },
+    {
+        iata_code: "VG",
+        icao_code: "VLM",
+        name: "",
+    },
+    {
+        iata_code: "VH",
+        icao_code: "VVC",
+        name: "",
+    },
+    {
+        iata_code: "VJ",
+        icao_code: "VJC",
+        name: "",
+    },
+    {
+        iata_code: "VK",
+        icao_code: "FOO",
+        name: "",
+    },
+    {
+        iata_code: "VL",
+        icao_code: "VIM",
+        name: "",
+    },
+    {
+        iata_code: "VM",
+        icao_code: "NGL",
+        name: "",
+    },
+    {
+        iata_code: "VN",
+        icao_code: "HVN",
+        name: "",
+    },
+    {
+        iata_code: "VO",
+        icao_code: "WLM",
+        name: "",
+    },
+    {
+        iata_code: "VP",
+        icao_code: "VQI",
+        name: "",
+    },
+    {
+        iata_code: "VR",
+        icao_code: "TCV",
+        name: "",
+    },
+    {
+        iata_code: "VS",
+        icao_code: "VIR",
+        name: "",
+    },
+    {
+        iata_code: "VT",
+        icao_code: "VTA",
+        name: "",
+    },
+    {
+        iata_code: "VU",
+        icao_code: "VAR",
+        name: "",
+    },
+    {
+        iata_code: "VV",
+        icao_code: "VPE",
+        name: "",
+    },
+    {
+        iata_code: "VW",
+        icao_code: "TAO",
+        name: "",
+    },
+    {
+        iata_code: "VX",
+        icao_code: "VRD",
+        name: "",
+    },
+    {
+        iata_code: "VY",
+        icao_code: "VLG",
+        name: "",
+    },
+    {
+        iata_code: "VZ",
+        icao_code: "TVJ",
+        name: "",
+    },
+    {
+        iata_code: "W2",
+        icao_code: "FXT",
+        name: "",
+    },
+    {
+        iata_code: "W3",
+        icao_code: "ARA",
+        name: "",
+    },
+    {
+        iata_code: "W4",
+        icao_code: "LCB",
+        name: "",
+    },
+    {
+        iata_code: "W5",
+        icao_code: "IRM",
+        name: "",
+    },
+    {
+        iata_code: "W6",
+        icao_code: "WZZ",
+        name: "",
+    },
+    {
+        iata_code: "W7",
+        icao_code: "SAH",
+        name: "",
+    },
+    {
+        iata_code: "W8",
+        icao_code: "WND",
+        name: "",
+    },
+    {
+        iata_code: "WA",
+        icao_code: "KLC",
+        name: "",
+    },
+    {
+        iata_code: "WB",
+        icao_code: "RWD",
+        name: "",
+    },
+    {
+        iata_code: "WC",
+        icao_code: "ISV",
+        name: "",
+    },
+    {
+        iata_code: "WD",
+        icao_code: "AAN",
+        name: "",
+    },
+    {
+        iata_code: "WE",
+        icao_code: "THD",
+        name: "",
+    },
+    {
+        iata_code: "WF",
+        icao_code: "WIF",
+        name: "",
+    },
+    {
+        iata_code: "WG",
+        icao_code: "SWG",
+        name: "",
+    },
+    {
+        iata_code: "WI",
+        icao_code: "WHT",
+        name: "",
+    },
+    {
+        iata_code: "WJ",
+        icao_code: "LAL",
+        name: "",
+    },
+    {
+        iata_code: "WK",
+        icao_code: "EDW",
+        name: "",
+    },
+    {
+        iata_code: "WL",
+        icao_code: "ECB",
+        name: "",
+    },
+    {
+        iata_code: "WM",
+        icao_code: "WIA",
+        name: "",
+    },
+    {
+        iata_code: "WN",
+        icao_code: "SWA",
+        name: "",
+    },
+    {
+        iata_code: "WO",
+        icao_code: "WOA",
+        name: "",
+    },
+    {
+        iata_code: "WP",
+        icao_code: "MKU",
+        name: "",
+    },
+    {
+        iata_code: "WR",
+        icao_code: "WEN",
+        name: "",
+    },
+    {
+        iata_code: "WS",
+        icao_code: "WJA",
+        name: "",
+    },
+    {
+        iata_code: "WT",
+        icao_code: "SWT",
+        name: "",
+    },
+    {
+        iata_code: "WU",
+        icao_code: "TKC",
+        name: "",
+    },
+    {
+        iata_code: "WV",
+        icao_code: "RVP",
+        name: "",
+    },
+    {
+        iata_code: "WX",
+        icao_code: "BCY",
+        name: "",
+    },
+    {
+        iata_code: "WY",
+        icao_code: "OAS",
+        name: "",
+    },
+    {
+        iata_code: "WZ",
+        icao_code: "RWZ",
+        name: "",
+    },
+    {
+        iata_code: "X3",
+        icao_code: "TUI",
+        name: "",
+    },
+    {
+        iata_code: "X6",
+        icao_code: "ATA",
+        name: "",
+    },
+    {
+        iata_code: "X7",
+        icao_code: "CHG",
+        name: "",
+    },
+    {
+        iata_code: "X9",
+        icao_code: "NVD",
+        name: "",
+    },
+    {
+        iata_code: "XC",
+        icao_code: "CAI",
+        name: "",
+    },
+    {
+        iata_code: "XE",
+        icao_code: "JSX",
+        name: "",
+    },
+    {
+        iata_code: "XF",
+        icao_code: "VLK",
+        name: "",
+    },
+    {
+        iata_code: "XJ",
+        icao_code: "TAX",
+        name: "",
+    },
+    {
+        iata_code: "XK",
+        icao_code: "CCM",
+        name: "",
+    },
+    {
+        iata_code: "XL",
+        icao_code: "LNE",
+        name: "",
+    },
+    {
+        iata_code: "XM",
+        icao_code: "IMX",
+        name: "",
+    },
+    {
+        iata_code: "XN",
+        icao_code: "XAR",
+        name: "",
+    },
+    {
+        iata_code: "XP",
+        icao_code: "CXP",
+        name: "",
+    },
+    {
+        iata_code: "XQ",
+        icao_code: "SXS",
+        name: "",
+    },
+    {
+        iata_code: "XR",
+        icao_code: "CXI",
+        name: "",
+    },
+    {
+        iata_code: "XS",
+        icao_code: "SIT",
+        name: "",
+    },
+    {
+        iata_code: "XT",
+        icao_code: "INX",
+        name: "",
+    },
+    {
+        iata_code: "XW",
+        icao_code: "NCT",
+        name: "",
+    },
+    {
+        iata_code: "XY",
+        icao_code: "KNE",
+        name: "",
+    },
+    {
+        iata_code: "XZ",
+        icao_code: "EXY",
+        name: "",
+    },
+    {
+        iata_code: "Y2",
+        icao_code: "CEY",
+        name: "",
+    },
+    {
+        iata_code: "Y3",
+        icao_code: "VOS",
+        name: "",
+    },
+    {
+        iata_code: "Y4",
+        icao_code: "VOI",
+        name: "",
+    },
+    {
+        iata_code: "Y6",
+        icao_code: "AYD",
+        name: "",
+    },
+    {
+        iata_code: "Y7",
+        icao_code: "TYA",
+        name: "",
+    },
+    {
+        iata_code: "Y8",
+        icao_code: "YZR",
+        name: "",
+    },
+    {
+        iata_code: "Y9",
+        icao_code: "IRK",
+        name: "",
+    },
+    {
+        iata_code: "YC",
+        icao_code: "LLM",
+        name: "",
+    },
+    {
+        iata_code: "YG",
+        icao_code: "OTL",
+        name: "",
+    },
+    {
+        iata_code: "YH",
+        icao_code: "AYG",
+        name: "",
+    },
+    {
+        iata_code: "YJ",
+        icao_code: "AWM",
+        name: "",
+    },
+    {
+        iata_code: "YL",
+        icao_code: "LWA",
+        name: "",
+    },
+    {
+        iata_code: "YM",
+        icao_code: "MGX",
+        name: "",
+    },
+    {
+        iata_code: "YN",
+        icao_code: "CRQ",
+        name: "",
+    },
+    {
+        iata_code: "YO",
+        icao_code: "MCM",
+        name: "",
+    },
+    {
+        iata_code: "YP",
+        icao_code: "PAG",
+        name: "",
+    },
+    {
+        iata_code: "YQ",
+        icao_code: "LCT",
+        name: "",
+    },
+    {
+        iata_code: "YR",
+        icao_code: "SCE",
+        name: "",
+    },
+    {
+        iata_code: "YS",
+        icao_code: "RAE",
+        name: "",
+    },
+    {
+        iata_code: "YT",
+        icao_code: "NYT",
+        name: "",
+    },
+    {
+        iata_code: "YU",
+        icao_code: "MMZ",
+        name: "",
+    },
+    {
+        iata_code: "YV",
+        icao_code: "ASH",
+        name: "",
+    },
+    {
+        iata_code: "YW",
+        icao_code: "ANE",
+        name: "",
+    },
+    {
+        iata_code: "YX",
+        icao_code: "MEP",
+        name: "",
+    },
+    {
+        iata_code: "YZ",
+        icao_code: "ALY",
+        name: "",
+    },
+    {
+        iata_code: "Z2",
+        icao_code: "EZD",
+        name: "",
+    },
+    {
+        iata_code: "Z4",
+        icao_code: "GZQ",
+        name: "",
+    },
+    {
+        iata_code: "Z5",
+        icao_code: "GMG",
+        name: "",
+    },
+    {
+        iata_code: "Z6",
+        icao_code: "UDN",
+        name: "",
+    },
+    {
+        iata_code: "Z7",
+        icao_code: "AUZ",
+        name: "",
+    },
+    {
+        iata_code: "Z8",
+        icao_code: "AZN",
+        name: "",
+    },
+    {
+        iata_code: "Z9",
+        icao_code: "BEK",
+        name: "",
+    },
+    {
+        iata_code: "ZA",
+        icao_code: "SWM",
+        name: "",
+    },
+    {
+        iata_code: "ZB",
+        icao_code: "MON",
+        name: "",
+    },
+    {
+        iata_code: "ZC",
+        icao_code: "FZW",
+        name: "",
+    },
+    {
+        iata_code: "ZD",
+        icao_code: "EWR",
+        name: "",
+    },
+    {
+        iata_code: "ZE",
+        icao_code: "ESR",
+        name: "",
+    },
+    {
+        iata_code: "ZF",
+        icao_code: "KTK",
+        name: "",
+    },
+    {
+        iata_code: "ZG",
+        icao_code: "GOZ",
+        name: "",
+    },
+    {
+        iata_code: "ZH",
+        icao_code: "CSZ",
+        name: "",
+    },
+    {
+        iata_code: "ZI",
+        icao_code: "AAF",
+        name: "",
+    },
+    {
+        iata_code: "ZJ",
+        icao_code: "ZMA",
+        name: "",
+    },
+    {
+        iata_code: "ZK",
+        icao_code: "GLA",
+        name: "",
+    },
+    {
+        iata_code: "ZL",
+        icao_code: "RXA",
+        name: "",
+    },
+    {
+        iata_code: "ZM",
+        icao_code: "MBB",
+        name: "",
+    },
+    {
+        iata_code: "ZN",
+        icao_code: "NAY",
+        name: "",
+    },
+    {
+        iata_code: "ZP",
+        icao_code: "AZP",
+        name: "",
+    },
+    {
+        iata_code: "ZQ",
+        icao_code: "AZM",
+        name: "",
+    },
+    {
+        iata_code: "ZT",
+        icao_code: "AWC",
+        name: "",
+    },
+    {
+        iata_code: "ZV",
+        icao_code: "VAX",
+        name: "",
+    },
+    {
+        iata_code: "ZW",
+        icao_code: "AWI",
+        name: "",
+    },
+    {
+        iata_code: "ZX",
+        icao_code: "GGN",
+        name: "",
+    },
 ]

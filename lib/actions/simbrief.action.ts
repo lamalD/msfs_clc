@@ -49,6 +49,7 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
                         departureDate: updatedFlight.departureDate,
                         departureTime: updatedFlight.departureTime,
                         aircraftType: updatedFlight.aircraftType,
+                        registration: updatedFlight.registration,
                         flightNumber: updatedFlight.flightNumber,
                         blockFuel: updatedFlight.blockFuel,
                         takeoffFuel: updatedFlight.takeoffFuel,
@@ -100,6 +101,7 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
                         departureDate: newFlight.departureDate,
                         departureTime: newFlight.departureTime,
                         aircraftType: newFlight.aircraftType,
+                        registration: newFlight.registration,
                         flightNumber: newFlight.flightNumber,
                         blockFuel: newFlight.blockFuel,
                         takeoffFuel: newFlight.takeoffFuel,
@@ -161,7 +163,6 @@ export async function checkFlight({flightData, usernameSimbrief}:{flightData:any
         console.log("currentFlightId: ", currentFlightId)
 
         if (currentFlightId === "No currentFlightId found") {
-            // console.log("No currentFlightId found, downloaded flight can be inserted in DB.")
 
             // INSERT FLIGHT IN DB
             await createFlight({flightData:flightData, usernameSimbrief:usernameSimbrief})
@@ -220,8 +221,10 @@ export async function createFlight({flightData, usernameSimbrief}:{flightData:an
             doi: aircraft.find((type) => type.acft === flightData.aircraft.iata_code)?.doi,
             zfw: flightData.weights.est_zfw,
             zfwi: "0",
+            zfwmac: "0.0",
             tow: flightData.weights.est_tow,
             towi: "0",
+            towmac: "0.0",
             ldw: flightData.weights.est_ldw,
             pld: flightData.weights.payload,
             paxCount: flightData.weights.pax_count,
@@ -232,10 +235,18 @@ export async function createFlight({flightData, usernameSimbrief}:{flightData:an
             bagCount: flightData.weights.bag_count,
             bag_weight: flightData.weights.bag_weight,
             cargo: flightData.weights.cargo,
+            fwd_hold: "0",
+            fwd_hold_uld: "",
+            aft_hold: "0",
+            aft_hold_uld: "",
+            blk_hold: "0",
+            blk_hold_uld: "",
             ramp_fuel: flightData.fuel.plan_ramp,
             to_fuel: flightData.fuel.plan_takeoff,
             trip_fuel: flightData.fuel.enroute_burn,
             units: flightData.params.units,
+            limitation: "",
+            underload: "0",
         }
     )
 
@@ -255,9 +266,14 @@ export async function createFlight({flightData, usernameSimbrief}:{flightData:an
                 paxCount_F: updatedWnB.paxF!,
                 paxCount_C: updatedWnB.paxC!,
                 paxCount_Y: updatedWnB.paxY!,
+                fwd_hold: updatedWnB.fwdHld!,
+                aft_hold: updatedWnB.aftHld!,
+                blk_hold: updatedWnB.blkHld!,
                 fwd_hold_uld: updatedWnB.fwd_hold_uld,
                 aft_hold_uld: updatedWnB.aft_hold_uld,
                 blk_hold_uld: updatedWnB.blk_hold_uld,
+                limitation: updatedWnB.limitation,
+                underload: updatedWnB.underload,
             },
             {new: true},
         )
@@ -325,6 +341,8 @@ export async function updateFlight({flightData, usernameSimbrief, _id}:{flightDa
                     fwd_hold_uld: updatedWnB.fwd_hold_uld,
                     aft_hold_uld: updatedWnB.aft_hold_uld,
                     blk_hold_uld: updatedWnB.blk_hold_uld,
+                    limitation: updatedWnB.limitation,
+                    underload: updatedWnB.underload,
                 },
                 {new: true},
             )

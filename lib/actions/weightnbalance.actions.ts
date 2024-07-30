@@ -10,6 +10,7 @@ import { aircraft } from "@/constants/aircraftindex"
 import Flight from "../database/models/flight.model"
 import { fuelIndex_77W } from "@/constants/fuelindex"
 import { loadDistribution } from "./loaddistribution.actions"
+import { calculateAllowedTrafficLoad, calculateOperatingWeight, calculateUnderload } from "./loadsheet.actions"
 
 export async function calcWnB(id: string) {
     try {
@@ -92,6 +93,16 @@ export async function calcWnB(id: string) {
         
         const loadData = await loadDistribution(id)
 
+        const operatingWeight = await calculateOperatingWeight(flight.dow, flight.takeoffFuel)
+        console.log("Operating Weight = ", operatingWeight)
+
+        const allowedTrafficLoad = await calculateAllowedTrafficLoad(flight.takeoffFuel, flight.tripfuel, operatingWeight, flight.aircraftType, flight.units)
+        console.log("Allowed Traffic Load = ", allowedTrafficLoad.allowedTrafficLoad)
+        console.log("Limitation: ", allowedTrafficLoad.limitingWeight)
+
+        const underload = await calculateUnderload(allowedTrafficLoad.allowedTrafficLoad, flight.pld)
+        console.log("underload: ", underload)
+
         return{
             status:"success",
             paxF: ttlPax_F,
@@ -108,6 +119,8 @@ export async function calcWnB(id: string) {
             fwd_hold_uld: loadData.fwdHldUlds.toString(),
             aft_hold_uld: loadData.aftHldUlds.toString(),
             blk_hold_uld: loadData.blkHldUlds.toString(),
+            limitation: allowedTrafficLoad.limitingWeight,
+            underload: underload.toString(),
         }
 
     } catch (error) {

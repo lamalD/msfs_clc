@@ -1,10 +1,14 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button } from './ui/button'
 
 import { LoadSimbriefData } from '@/lib/actions/simbrief.action'
 import { AppleSpinner } from './shared/appeSpinner'
+import { useAuth } from '@clerk/nextjs'
+import { redirect } from 'next/navigation'
+import { getUserById } from '@/lib/actions/user.actions'
+import { getLocalData } from '@/lib/actions/localstorage.actions'
 
 interface SimbriefData {
     _id: string,
@@ -15,6 +19,7 @@ interface SimbriefData {
     departureDate: string,
     departureTime: string,
     aircraftType: string,
+    registration: string,
     flightNumber: string,
     blockFuel: string,
     takeoffFuel: string,
@@ -60,8 +65,10 @@ function formatDateAndTime(isoString: string): { date: string; time: string } {
   };
 
   const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: '2-digit'
+    hour12: false, // Force 24-hour format
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC'
   };
 
   const formattedDate = date.toLocaleDateString('en-GB', dateOptions).replace(',', '')
@@ -73,43 +80,49 @@ function formatDateAndTime(isoString: string): { date: string; time: string } {
 const InitFlight = () => {
 
     const [loading, setLoading] = useState(false)
+    const [simbriefUsername, setSimbriefUsername] = useState('');
     const [simbriefData, setSimbriefData] = useState<SimbriefData | null>(null)
     const [error, setError] = useState<string | null>(null)
-    
-    const simbriefUser = "Lamal_D"
+    const { userId } = useAuth()
+
+    const simbriefUsernameFetch = useCallback(async () => {
+      try {
+
+        if (!userId) redirect("/sign-in");
+
+        setSimbriefUsername(getLocalData('usernameSimbrief') || '');
+        
+      } catch (error) {
+        console.error('Error fetching simbrief username:', error);
+      }
+  
+    }, [userId])
 
     const handleImport = async () => {
-        setLoading(true);
-        setError(null)
-        try {
-          const data = await LoadSimbriefData({ usernameSimbrief: simbriefUser });
-          setSimbriefData(data!)
-          console.log("simbriefData: ", data!)
-        } catch (error: unknown) {
-          console.error('Error fetching data:', error)
-          if (error instanceof Error) {
-            if (error.message === "Aircraft currently not supported!") {
-              // Handle unsupported aircraft case
-              console.log('Aircraft currently not supported')
-              // You can display an error message to the user here
-              setSimbriefData(null); // Set simbriefData to null for unsupported aircraft
-            } else {
-              // Handle other errors
-              console.log('Unexpected error:', error.message)
-            }
-          }
-        } finally {
-          setLoading(false)
-        }
+      setLoading(true);
+      setError(null);
+  
+      try {
+        const data = await LoadSimbriefData({ usernameSimbrief: simbriefUsername });
+        setSimbriefData(data!);
+      } catch (error: unknown) {
+        console.error('Error fetching data:', error);
+        setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+        setSimbriefData(null);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    const loadImport = async () => {
-      // setLoading(true);
-      // setError(null)
+    const loadImport = useCallback(async () => {
+      
       try {
-        const data = await LoadSimbriefData({ usernameSimbrief: simbriefUser });
-        setSimbriefData(data!)
-        console.log("simbriefData: ", data!)
+        if (simbriefUsername) {
+
+          const data = await LoadSimbriefData({ usernameSimbrief: simbriefUsername });
+          setSimbriefData(data!)
+          console.log("simbriefData: ", data!)
+        }
       } catch (error: unknown) {
         console.error('Error fetching data:', error)
         if (error instanceof Error) {
@@ -126,11 +139,18 @@ const InitFlight = () => {
       } finally {
         // setLoading(false)
       }
-  }
+  }, [simbriefUsername])
 
+  useEffect(() => {
+
+    simbriefUsernameFetch()
+
+  }, [simbriefUsernameFetch])
+  
     useEffect(() => {
+      
       loadImport();
-    }, [])
+    }, [loadImport])
     
     useEffect(() => {
         // Handle actions based on simbriefData changes
@@ -138,16 +158,6 @@ const InitFlight = () => {
         // Populate your UI elements with simbriefData here
 
         if (simbriefData) {
-            // // Assuming a grid structure with columns and rows
-            // const gridElements = document.querySelectorAll('.grid-cols-4 .bg-gray-1');
-        
-            // // Populate data based on SimbriefData structure
-            // gridElements[0].textContent = simbriefData.flightNumber || ''; // Handle potential undefined values
-            // gridElements[1].textContent = simbriefData.departureDate || '';
-            // // ... and so on for other grid elements
-            // const { date, time } = splitDateAndTime(simbriefData.departureDate)
-            // console.log(date)
-            // console.log(time)
 
             const { date, time } = formatDateAndTime(simbriefData.departureDate)
             console.log(date)
@@ -155,8 +165,8 @@ const InitFlight = () => {
 
             simbriefData.departureDate = date
             simbriefData.departureTime = time
-          }
-      }, [simbriefData])
+        }
+    }, [simbriefData])
 
   return (
     <div className='flex flex-col w-full px-4 py-4'>
@@ -168,7 +178,6 @@ const InitFlight = () => {
                 >
                     {loading ? (
                         <AppleSpinner />
-                        // <AppleSpinner className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                         ) : (
                             'Import from Simbrief'
                         )
@@ -176,44 +185,45 @@ const InitFlight = () => {
             </Button>
         </div>
         <div className='flex border border-white-1 rounded-lg py-2 bg-white-5'>
-                  <div className='grid grid-cols-4 mx-2 gap-x-2 w-full p-4'>
-                      <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Flight Number</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Departure Date</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Departure Time</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Aircraft Type</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.flightNumber : ''}</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? formatDateAndTime(simbriefData.departureDate).date : ''}</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? formatDateAndTime(simbriefData.departureDate).time : ''}</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.aircraftType : ''}</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Departure</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Arrival</div>
-                      <div></div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Aircraft Registration</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.origin : ''}</div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.destination : ''}</div>
-                      <div></div>
-                      <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>Col8</div>
-                  </div>
-              </div><div className='flex border border-white-1 rounded-lg py-2 bg-white-5 mt-4'>
-                      <div className='grid grid-cols-4 mx-2 gap-x-2 w-full p-4'>
-                          <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Empty Weight</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Estimated ZFW</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Estimated TOW</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Estimated LDW</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.dow + " " + simbriefData.units : ''}</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.zfw + " " + simbriefData.units : ''}</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.tow + " " + simbriefData.units : ''}</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.ldw + " " + simbriefData.units : ''}</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Block Fuel</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Fuel Burn</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Payload</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Pax Count</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.ramp_fuel + " " + simbriefData.units : ''}</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.trip_fuel + " " + simbriefData.units : ''}</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.pld + " " + simbriefData.units : ''}</div>
-                          <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.paxCount : ''}</div>
-                      </div>
-                  </div>
+          <div className='grid grid-cols-4 mx-2 gap-x-2 w-full p-4'>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Flight Number</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Departure Date</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Departure Time</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Aircraft Type</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.flightNumber : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? formatDateAndTime(simbriefData.departureDate).date : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? formatDateAndTime(simbriefData.departureDate).time : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.aircraftType : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Departure</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Arrival</div>
+            <div></div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Aircraft Registration</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.origin : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.destination : ''}</div>
+            <div></div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.registration : ''}</div>
+          </div>
+        </div>
+        <div className='flex border border-white-1 rounded-lg py-2 bg-white-5 mt-4'>
+          <div className='grid grid-cols-4 mx-2 gap-x-2 w-full p-4'>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Empty Weight</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Estimated ZFW</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Estimated TOW</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Estimated LDW</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.dow + " " + simbriefData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.zfw + " " + simbriefData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.tow + " " + simbriefData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.ldw + " " + simbriefData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Block Fuel</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Fuel Burn</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Payload</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Pax Count</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.ramp_fuel + " " + simbriefData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.trip_fuel + " " + simbriefData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.pld + " " + simbriefData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.paxCount : ''}</div>
+          </div>
+        </div>
     </div>
   )
 }

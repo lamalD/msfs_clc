@@ -41,6 +41,8 @@ export interface FlightProps extends Document {
     to_fuel: string
     trip_fuel: string
     units: string
+    limitation: string
+    underload: string
 }
 
 const FlightSchema = new Schema<FlightProps>({
@@ -71,6 +73,9 @@ const FlightSchema = new Schema<FlightProps>({
     aircraftType: {
         type: String,
         required: true,
+    },
+    registration: {
+        type: String,
     },
     flightNumber: {
         type: String,
@@ -170,7 +175,12 @@ const FlightSchema = new Schema<FlightProps>({
         type: String,
         required: true,
     },
-
+    limitation: {
+        type: String,
+    },
+    underload: {
+        type: String,
+    },
 })
 
 const Flight = models?.Flight || model("Flight", FlightSchema);
