@@ -153,6 +153,20 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
     }
 }
 
+export async function loadCurrentFlight(currentFlightId:string) {
+    try {
+        
+        await connectToDatabase()
+
+        const flight_db_id = await getUserCurrentFlight(currentFlightId)
+
+        console.log("flight_db_id: ", flight_db_id)
+        return flight_db_id
+    } catch (error) {
+        handleError(error)
+    }
+}
+
 export async function checkFlight({flightData, usernameSimbrief}:{flightData:any, usernameSimbrief:string}) {
 
     try {

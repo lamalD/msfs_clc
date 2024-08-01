@@ -65,9 +65,9 @@ export async function loadDistribution(db_Id:string) {
     aftHldUlds = assignLD3.aftHldUlds
     fwdHldUlds = assignLD3.fwdHldUlds
 
-    blkHldUlds.push("5/BF/"+(assignLD3.remainingBagsF*(flight.bag_weight)).toFixed()+"/R")
-    blkHldUlds.push("5/BC/"+(assignLD3.remainingBagsC*(flight.bag_weight)).toFixed()+"/R")
-    blkHldUlds.push("5/BY/"+(assignLD3.remainingBagsY*(flight.bag_weight)).toFixed()+"/R")
+    blkHldUlds.push("5/BF/"+(assignLD3.remainingBagsF*(flight.bag_weight)).toFixed()+"/"+(assignLD3.remainingBagsF).toFixed()+"/"+flight.destination+"/R")
+    blkHldUlds.push("5/BC/"+(assignLD3.remainingBagsC*(flight.bag_weight)).toFixed()+"/"+(assignLD3.remainingBagsC).toFixed()+"/"+flight.destination+"/R")
+    blkHldUlds.push("5/BY/"+(assignLD3.remainingBagsY*(flight.bag_weight)).toFixed()+"/"+(assignLD3.remainingBagsY).toFixed()+"/"+flight.destination+"/R")
 
     console.log("blkHld: ", blkHldUlds)
 
@@ -98,9 +98,9 @@ export async function loadDistribution(db_Id:string) {
     var availWeightCargoAft = assignedCargoWeight.availWeightCargoAft
     var availWeightCargoBlk = assignedCargoWeight.availWeightCargoBlk
 
-    const fwdCargoUlds = await generateCargoUldFwd(fwdHld, availWeightCargoFwd, fwdHldUlds)
-    const aftCargoUlds = await generateCargoUldAft(aftHld, availWeightCargoAft, aftHldUlds)
-    const blkCargoUlds = await generateCargoUldBlk(availWeightCargoBlk, blkHldUlds)
+    const fwdCargoUlds = await generateCargoUldFwd(fwdHld, availWeightCargoFwd, fwdHldUlds, flight.destination)
+    const aftCargoUlds = await generateCargoUldAft(aftHld, availWeightCargoAft, aftHldUlds, flight.destination)
+    const blkCargoUlds = await generateCargoUldBlk(availWeightCargoBlk, blkHldUlds, flight.destination)
 
     return {
         fwdHldUlds: fwdCargoUlds.fwdHldUlds,
@@ -324,7 +324,7 @@ async function assignCatToLD3(
                 remainingWeightC = remainingWeightC - (remainingBagsC * parseFloat(bag_weight))
                 remainingWeightF = remainingWeightF - (remainingBagsF * parseFloat(bag_weight))
                 
-                aftHldUlds[index] = element + "/" + "BF" + "/" + "BC" + "/" + loadedWeight.toFixed(0) + "/" + loadedBags.toFixed()
+                aftHldUlds[index] = element + "/" + "BF" + "/" + "BC" + "/" + loadedWeight.toFixed(0) + "/" + loadedBags.toFixed() + "/" + destination
             } else {
 
                 var loadedBags = 0
@@ -341,7 +341,7 @@ async function assignCatToLD3(
 
                 remainingWeightC = remainingWeightC - (remainingBagsC * parseFloat(bag_weight))
                 
-                aftHldUlds[index] = element + "/" + "BC" + "/" + loadedWeight.toFixed(0) + "/" + loadedBags.toFixed()
+                aftHldUlds[index] = element + "/" + "BC" + "/" + loadedWeight.toFixed(0) + "/" + loadedBags.toFixed() + "/" + destination
             }
 
         } else {
@@ -356,13 +356,13 @@ async function assignCatToLD3(
 
             if (loadedBags < 20) {
                 console.log("This should be a cargo ULD")
-                aftHldUlds[index] = element + "/" + "C" + "/" + getRandomCargoWeight(250, 825).toFixed(0)
+                aftHldUlds[index] = element + "/" + "C" + "/" + getRandomCargoWeight(250, 825).toFixed(0) + "/" + destination
             }
             var loadedWeight = loadedBags * parseFloat(bag_weight)
             
             remainingWeightY = remainingWeightY - loadedWeight
             
-            aftHldUlds[index] = element + "/" + "BY" + "/" + loadedWeight.toFixed(0) + "/" + loadedBags.toFixed()
+            aftHldUlds[index] = element + "/" + "BY" + "/" + loadedWeight.toFixed(0) + "/" + loadedBags.toFixed() + "/" + destination
 
         }
     }
@@ -387,10 +387,10 @@ async function assignCatToLD3(
         
         if (loadedBags < 20) {
             console.log("This should be a cargo ULD")
-            fwdHldUlds[index] = element + "/" + "C" + "/" + getRandomCargoWeight(250, 825).toFixed(0)
+            fwdHldUlds[index] = element + "/" + "C" + "/" + getRandomCargoWeight(250, 825).toFixed(0) + "/" + destination
         } else {
 
-            fwdHldUlds[index] = element + "/" + "BY" + "/" + loadedWeight.toFixed(0) + "/" + loadedBags.toFixed()
+            fwdHldUlds[index] = element + "/" + "BY" + "/" + loadedWeight.toFixed(0) + "/" + loadedBags.toFixed() + "/" + destination
         }
     }
 
@@ -477,6 +477,7 @@ async function generateCargoUldFwd(
     fwdHld:string[],
     availWeightCargoFwd:number,
     fwdHldUlds:string[],
+    destination:string,
 ) {
 
     let uldType
@@ -564,7 +565,8 @@ async function generateCargoUldFwd(
                 + "C" 
                 + "/"
                 + (uldWeight.toFixed())
-                // ADD DESTINATION!!!
+                + "/"
+                + destination
         }
 
         console.log("uldNumber: ", uldNumber)
@@ -579,6 +581,7 @@ async function generateCargoUldAft(
     aftHld:string[],
     availWeightCargoAft:number,
     aftHldUlds:string[],
+    destination:string,
 ) {
     function findLastIndexOfP(arr: string[]): number | undefined {
         const lastPItem = arr.findLast((item) => item.includes('P'));
@@ -684,7 +687,8 @@ async function generateCargoUldAft(
                 + "C" 
                 + "/"
                 + (uldWeight.toFixed())
-                // ADD DESTINATION!!!
+                + "/"
+                + destination
         }
 
         console.log("uldNumber: ", uldNumber)
@@ -695,7 +699,7 @@ async function generateCargoUldAft(
     return { aftHldUlds }
 }
 
-async function generateCargoUldBlk(availWeightCargoBlk:number, blkHldUlds:string[]) {
+async function generateCargoUldBlk(availWeightCargoBlk:number, blkHldUlds:string[], destination:string) {
     
     const getRandomCargoWeight = (min: number, max: number) => {
         return Math.random() * (max - min) + min
@@ -705,8 +709,8 @@ async function generateCargoUldBlk(availWeightCargoBlk:number, blkHldUlds:string
     var cargoWeightBlk = availWeightCargoBlk - mailWeightBlk
     availWeightCargoBlk = availWeightCargoBlk - (mailWeightBlk + cargoWeightBlk)
     
-    blkHldUlds.push("5/M/"+mailWeightBlk.toFixed()+"/R")
-    blkHldUlds.push("5/C/"+cargoWeightBlk.toFixed()+"/R")
+    blkHldUlds.push("5/M/" + mailWeightBlk.toFixed() + "/" + destination + "/R")
+    blkHldUlds.push("5/C/" + cargoWeightBlk.toFixed() + "/" + destination + "/R")
 
     return { blkHldUlds }
 }

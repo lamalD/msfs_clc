@@ -5,17 +5,63 @@ import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { useAuth } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 import { uldPositions_77W } from '@/constants/loadconfigindex';
-import { getUserById } from '@/lib/actions/user.actions';
-import { allLoadedUlds } from '@/lib/actions/loadplan.actions';
+import { getUserById, getUserCurrentFlight } from '@/lib/actions/user.actions';
+import { allLoadedUlds, calculatePiecesAndWeights } from '@/lib/actions/loadplan.actions';
 import { DataTable } from '@/app/(private)/flight/data-table';
-import { columns, lddUlds } from '@/app/(private)/flight/columns';
+import { columns } from '@/app/(private)/flight/columns';
+import { handleError } from '@/lib/utils';
 
 interface UserData {
   usernameSimbrief: string
   currentFlightId: string
+}
+
+interface SimbriefData {
+  _id: string,
+  simbriefId: string,
+  usernameSimbrief: string,
+  origin: string,
+  destination: string,
+  departureDate: string,
+  departureTime: string,
+  aircraftType: string,
+  registration: string,
+  flightNumber: string,
+  blockFuel: string,
+  takeoffFuel: string,
+  tripfuel: string,
+  dow: string,
+  doi: string,
+  zfw: string,
+  zfwi: string,
+  tow: string,
+  towi: string,
+  ldw: string,
+  pld: string,
+  paxCount: string,
+  pax_weight: string,
+  paxCount_F: string,
+  paxCount_C: string,
+  paxCount_Y: string,
+  bagCount: string,
+  bag_weight: string,
+  cargo: string,
+  ramp_fuel: string,
+  to_fuel: string,
+  trip_fuel: string,
+  units: string,
+  __v: 0,
+  aft_hold_uld: string,
+  blk_hold_uld: string,
+  fwd_hold_uld: string,
+  towmac: string,
+  zfwmac: string,
+  aft_hold: string,
+  blk_hold: string,
+  fwd_hold: string,
 }
 
 interface ULD {
@@ -26,6 +72,8 @@ interface ULD {
   startY: number
   category: string
   weight: string
+  pieces: string
+  destination: string
 }
 
 interface UldData {
@@ -34,17 +82,52 @@ interface UldData {
   category: string
   weight: string
   pieces: string | null
+  destination: string
+}
+
+function formatDateAndTime(isoString: string): { date: string; time: string } {
+  const date = new Date(isoString);
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    day: '2-digit',
+    month: 'short',
+    year: '2-digit'
+  };
+
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour12: false, // Force 24-hour format
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC'
+  };
+
+  const formattedDate = date.toLocaleDateString('en-GB', dateOptions).replace(',', '')
+  const formattedTime = date.toLocaleTimeString('en-GB', timeOptions)
+
+  return { date: formattedDate, time: formattedTime }
 }
 
 const Loadplan = () => {
 
   // const [loading, setLoading] = useState(false)
+  const [userData, setUserData] = useState<UserData | null>(null)
+  
   const [simbriefUsername, setSimbriefUsername] = useState('');
   const [currentFlightId, setCurrentFlightId] = useState('');
-  const [userData, setUserData] = useState<UserData | null>(null)
+  const [flight, setFlight] = useState<SimbriefData | null>(null)
+
   const [uldLoadData, setUldLoadData] = useState<string[]>([])
   const [blkLoadData, setBlkLoadData] = useState<string[]>([])
   const [allUldData, setAllUldData] = useState<UldData[]>([])
+
+  const [ttlPax, setTtlPax] = useState(0)
+  const [ttlPaxWeight, setTtlPaxWeight] = useState(0)
+  const [ttlBagWeight, setTtlBagWeight] = useState(0)
+  const [ttlBagPcs, setTtlBagPcs] = useState(0)
+  const [ttlCargoWeight, setTtlCargoWeight] = useState(0)
+  const [ttlMailWeight, setTtlMailWeight] = useState(0)
+  const [ttlTrafficLoad, setTtlTrafficLoad] = useState(0)
+
   // const [error, setError] = useState<string | null>(null)
   const { userId } = useAuth()
 
@@ -59,6 +142,7 @@ const Loadplan = () => {
         if (userData) {
           setSimbriefUsername(userData.usernameSimbrief);
           setCurrentFlightId(userData.currentFlightId)
+
         }
       } catch (error) {
         console.error('Error fetching simbrief username:', error);
@@ -69,7 +153,7 @@ const Loadplan = () => {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const uldData = async () => {
+  const uldData = useCallback(async () => {
 
     if (currentFlightId) {
   
@@ -95,47 +179,88 @@ const Loadplan = () => {
       const dataString = fwd_array.concat(aft_array, blk_array).join(',')
 
       const processData = (dataString: string): UldData[] => {
-        const dataArray = dataString.split(',')
+        const dataArray = dataString.split(',');
       
         const parseItem = (item: string): UldData => {
           const parts = item.split('/');
-          if (parts.length === 5) {
-            const [position, uldNumber, category, weight, pieces] = parts;
-            return { position, uldNumber, category, weight, pieces }
-          } else if (parts.length === 4) {
-            if (parts[0].length === 1) {
-              const [position, category, weight, pieces] = parts
-              return { position, uldNumber: null, category, weight, pieces: null }
-            } else {
-              const [position, uldNumber, category, weight, pieces] = parts
-              return { position, uldNumber, category, weight, pieces }
-            }
-          } else {
-            throw new Error('Invalid data format')
+      
+          if (parts.length !== 5 && parts.length !== 6) {
+            throw new Error('Invalid data format');
           }
+          
+          const isBulk = parts[parts.length - 1] === 'R'
+      
+          const position = parts[0]
+
+          const uldNumber = isBulk ? null : parts[1]
+          const category = isBulk ? parts[1] : parts[2]
+          const weight = isBulk ? parts[2] : parts[3]
+          const pieces = isBulk && parts[4] !== 'R' ? parts[3] : (category === 'BY' || category === 'BC' || category === 'BF') ? parts[4] : null
+          const destination = isBulk ? parts[parts.length-2] : parts[parts.length-1]
+          return { position, uldNumber, category, weight, pieces, destination }
         };
       
         const formattedData = dataArray.map(parseItem);
-        
+      
         return formattedData;
-
       }
       
       setAllUldData(processData(dataString))
-      
     }
-  }
+  }, [currentFlightId])
+
+  useEffect(() => {
+    if (currentFlightId) {
+      const fetchFlightData = async () => {
+        const fd = await getUserCurrentFlight(currentFlightId);
+        setFlight(fd);
+      }
+      fetchFlightData()
+    }
+  }, [currentFlightId])
   
+  useEffect(() => {
+    if (flight) {
+      const calculateAndUpdate = async () => {
+        const pcsNweights = await calculatePiecesAndWeights(flight, allUldData)
+        setTtlPax(pcsNweights.totalPaxCount)
+        setTtlPaxWeight(pcsNweights.totalPaxWeight)
+        setTtlBagWeight(pcsNweights.totalBagWeight);
+        setTtlBagPcs(pcsNweights.totalBagPcs);
+        setTtlCargoWeight(pcsNweights.totalCargoWeight);
+        setTtlMailWeight(pcsNweights.totalMailWeight);
+
+        setTtlTrafficLoad(pcsNweights.totalPaxWeight + pcsNweights.totalBagWeight + pcsNweights.totalCargoWeight + pcsNweights.totalMailWeight)
+      };
+      calculateAndUpdate();
+    }
+  }, [flight, allUldData]);
+
+  useEffect(() => {
+
+    const weightsNpieces = async () => {
+      if (flight && allUldData) {
+        try {  
+          const pNw = await calculatePiecesAndWeights(flight, allUldData)
+          
+        } catch (error) {
+          handleError(error)
+        }
+      }
+    }
+
+    weightsNpieces()
+  }, [flight, allUldData])
+
   useEffect(() => {
     simbriefUsernameFetch()
   })
 
   useEffect(() => {
-
-    if (uldLoadData.length === 0) {
+    if(currentFlightId){ 
       uldData()
     }
-  })
+  }, [currentFlightId])
 
   useEffect(() => {
     
@@ -157,18 +282,45 @@ const Loadplan = () => {
 
     const parseULDData = (dataString: string): ULD | null => {
 
+
       let [position] = dataString.split('/')
       let category:string
       let weight:string
       let uldType:string
       let uldNumber:string
+      let pieces:string | null = null
+      let destination: string
 
-      if (position.length == 1) {
-        
-        [position, category, weight] = dataString.split('/')
+      if (position.length == 3 || position.length == 2) {
+        [, , category] = dataString.split('/')
       } else {
-        [position, uldNumber, category, weight] = dataString.split('/')
-        uldType = uldNumber[1]
+        [, category] = dataString.split('/')
+      }
+
+      console.log("category: ", category)
+
+      switch (category) {
+        case "C":
+          if (position.length == 1) {
+            [position, category, weight, destination] = dataString.split('/')
+            console.log("pieces: ", pieces, " destination: ", destination)  
+          } else {
+            [position, uldNumber, category, weight, destination] = dataString.split('/')
+            console.log("pieces: ", pieces, " destination: ", destination)
+            uldType = uldNumber[1]
+          }
+          break;
+        case "M":
+          if (position.length == 1) {
+            [position, category, weight, destination] = dataString.split('/')    
+          } else {
+            [position, uldNumber, category, weight, destination] = dataString.split('/')
+          }
+          break;
+        default:
+          [position, uldNumber, category, weight, pieces, destination] = dataString.split('/')
+          uldType = uldNumber[1]
+          break;
       }
 
       console.log(dataString)
@@ -205,8 +357,9 @@ const Loadplan = () => {
             startY: parseFloat(uldData.start_position_y) * scaleFactor,
             category: category,
             weight: weight,
+            pieces: pieces ?? "",
+            destination: destination,
           }
-        // }
       }
 
       return null;
@@ -214,16 +367,28 @@ const Loadplan = () => {
 
     const parseBULKData = (dataString: string): ULD | null => {
 
-      let [position] = dataString.split('/')
-      // const [position, uldNumber, category, weight] = dataString.split('/')
-      let category:string
+      let [position, category] = dataString.split('/')
       let weight:string
       let uldType:string
       let uldNumber:string
+      let pieces:string | null = null
+      let destination:string
+
+      switch (category) {
+        case "C":
+          [position, category, weight, destination] = dataString.split('/')    
+          break;
+        case "M":
+            [position, category, weight, destination] = dataString.split('/')    
+          break;
+        default:
+          [position, category, weight, pieces, destination] = dataString.split('/')
+          break;
+      }
 
       if (position.length == 1) {
         
-        [position, category, weight] = dataString.split('/')
+        [position, category, weight, destination] = dataString.split('/')
       }
 
       console.log(dataString)
@@ -260,6 +425,8 @@ const Loadplan = () => {
             startY: parseFloat(uldData.start_position_y) * scaleFactor,
             category: category!,
             weight: weight!,
+            pieces: pieces ?? "",
+            destination: destination
           }
       }
 
@@ -317,14 +484,23 @@ const Loadplan = () => {
         const textYOffset = 25
         const lineHeight = 12
 
-        // ctx.fillText(uld.destination, uld.startX + scaledWidth / 2, uld.startY + scaledLength / 2 + lineHeight)
+        ctx.fillText(uld.destination, uld.startX + scaledWidth / 2, uld.startY + scaledLength / 2 + lineHeight*(-0.25))
         ctx.fillText(`${uld.category}/${uld.weight}`, uld.startX + scaledWidth / 2, uld.startY + textYOffset + scaledLength / 2 - lineHeight);
       } else {
-        ctx.font = '14px Arial';
+
+        ctx.font = '16px Arial';
         ctx.textAlign = 'center';
 
         const textYOffset = 25
         const lineHeight = 16
+
+        ctx.fillText(uld.destination, uld.startX + scaledWidth / 2, uld.startY + scaledLength / 2 + lineHeight*(-1))
+
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+
+        // const textYOffset = 25
+        // const lineHeight = 16
 
         // ctx.fillText(uld.destination, uld.startX + scaledWidth / 2, uld.startY + scaledLength / 2 + lineHeight)
         ctx.fillText(`${uld.category}/${uld.weight}`, uld.startX + scaledWidth / 2, uld.startY + textYOffset + scaledLength / 2 - lineHeight);  
@@ -358,7 +534,6 @@ const Loadplan = () => {
       for (let index = 0; index < blkLoadData.length; index++) {
         const element = blkLoadData[index];
         
-        console.log("element: ", element)
         const [position, category, weight] = element.split('/')
 
         ctx.font = '12px Arial'
@@ -378,45 +553,66 @@ const Loadplan = () => {
   })
 
   return (
-    <div className='flex flex-col w-full px-4 py-4'>
+    <div className='flex flex-col w-full px-2 py-2'>
       <div className='flex flex-col justify-center items-center w-full py-5'>
-        <h1>Header</h1>
+        <div className='flex flex-row justify-between items-center w-full pb-2'>
+          <div className='grid grid-cols-6 mt-2 gap-x-2 w-full p-2 border-1 border rounded-md border-white-1'>
+            <div className=' text-white-1 p-1 text-md text-center border-1 border-r border-white-1'>
+              Flight: {flight ? flight.flightNumber : " "}
+            </div>
+            <div className=' text-white-1 p-1 text-md text-center border-1 border-r border-white-1'>
+              From/To: {flight ? flight.origin+"/"+flight.destination : " "}
+            </div>
+            <div className=' text-white-1 p-1 text-md text-center border-1 border-r border-white-1'>
+              STD: {flight ? formatDateAndTime(flight.departureDate).time + "Z" : " "}
+            </div>
+            <div className=' text-white-1 p-1 text-md text-center border-1 border-r border-white-1'>
+              Date: {flight ? formatDateAndTime(flight.departureDate).date : " "}
+            </div>
+            <div className=' text-white-1 p-1 text-md text-center border-1 border-r border-white-1'>
+              A/C Reg: {flight ? flight.registration : " "}
+            </div>
+            <div className=' text-white-1 p-1 text-md text-center'>
+              A/C Type: {flight ? flight.aircraftType : " "}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className='p-15 mb-3 mt-2 bg-orange-1 h-1 rounded-lg'/>
+      <div className='p-15 mb-3 bg-orange-1 h-1 rounded-lg'/>
       <div>
         <canvas ref={canvasRef} key="myCanvas" className='bg-gray-1 pt-10 pb-0 px-5 w-full'/>
       </div>
       <div className='flex flex-row justify-between items-start w-full py-5 bg-orange-1 h-[350px]'>
-        <div className='px-5 w-1/3'>
+        <div className='px-5 mt-10 w-1/3'>
           <Card>
             <CardHeader>
               <CardTitle>Summary</CardTitle>
             </CardHeader>
             <CardContent>
               <div className='flex flex-row justify-between items-center'>
-                <p>Pax Weight</p>
-                <p>Card Content</p>
+                <p>Passengers</p>
+                <p>{ttlPax ? ttlPax.toFixed() : ""} / {ttlPaxWeight ? ttlPaxWeight.toFixed() : ""} {flight?.units}</p>
               </div>
               <div className='mb-2 bg-gray-1 h-0.5 rounded-lg'/>
               <div className='flex flex-row justify-between items-center'>
-                <p>Baggage Weight</p>
-                <p>Card Content</p>
+                <p>Baggage</p>
+                <p>{ttlBagPcs ? ttlBagPcs : ""} pcs / {ttlBagWeight ? ttlBagWeight.toFixed() : ""} {flight?.units}</p>
               </div>
               <div className='mb-2 bg-gray-1 h-0.5 rounded-lg'/>
               <div className='flex flex-row justify-between items-center'>
-                <p>Cargo Weight</p>
-                <p>Card Content</p>
+                <p>Cargo</p>
+                <p>{ttlCargoWeight ? ttlCargoWeight : ""} {flight?.units}</p>
               </div>
               <div className='mb-2 bg-gray-1 h-0.5 rounded-lg'/>
               <div className='flex flex-row justify-between items-center'>
-                <p>Mail Weight</p>
-                <p>Card Content</p>
+                <p>Mail</p>
+                <p>{ttlMailWeight ? ttlMailWeight : ""} {flight?.units}</p>
               </div>
               <div className='mb-1 mt-1 bg-gray-1 h-0.5 rounded-lg'/>
               <div className='mb-2 bg-gray-1 h-0.5 rounded-lg'/>
               <div className='flex flex-row justify-between items-center'>
                 <p>Total Traffic Load</p>
-                <p>Card Content</p>
+                <p>{ttlTrafficLoad ? ttlTrafficLoad.toFixed() : ""} {flight?.units}</p>
               </div>
             </CardContent>
           </Card>

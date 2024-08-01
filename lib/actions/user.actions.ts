@@ -94,6 +94,7 @@ export async function getUserCurrentFlight(currentFlightId: string) {
         if (!currentFlight) throw new Error("No flight found!")
 
         return JSON.parse(JSON.stringify(currentFlight))
+        // return currentFlight
 
     } catch (error) {
         handleError(error)

@@ -24,10 +24,10 @@ export const columns: ColumnDef<lddUlds>[] = [
     header: () => <div className="text-left">UldNumber</div>,
     cell: ({ row }) => <div className="text-xs text-left">{row.getValue("uldNumber")}</div>,
   },
-//   {
-//     accessorKey: "destination",
-//     header: "Dest.",
-//   },
+  {
+    accessorKey: "destination",
+    header: "Dest.",
+  },
   {
     accessorKey: "category",
     header: () => <div className="text-left">Cat.</div>,
