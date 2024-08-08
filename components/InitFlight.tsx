@@ -1,14 +1,12 @@
 'use client'
 
-import React, { useCallback, useEffect, useState } from 'react'
-import { Button } from './ui/button'
+import React, { useEffect, useState } from 'react'
 
-import { LoadSimbriefData } from '@/lib/actions/simbrief.action'
-import { AppleSpinner } from './shared/appeSpinner'
+import { useStore } from '@/lib/database/storeData'
 import { useAuth } from '@clerk/nextjs'
-import { redirect } from 'next/navigation'
-import { getUserById } from '@/lib/actions/user.actions'
-import { getLocalData } from '@/lib/actions/localstorage.actions'
+
+import { Button } from './ui/button'
+import { AppleSpinner } from './shared/appeSpinner'
 
 interface SimbriefData {
     _id: string,
@@ -55,6 +53,11 @@ interface SimbriefData {
     fwd_hold: string,
 }
 
+interface UserData {
+  usernameSimbrief: string
+  currentFlightId: string
+}
+
 function formatDateAndTime(isoString: string): { date: string; time: string } {
   const date = new Date(isoString);
 
@@ -79,94 +82,47 @@ function formatDateAndTime(isoString: string): { date: string; time: string } {
 
 const InitFlight = () => {
 
+    const { flightData, isLoading, fetchFlightData } = useStore()
+    const { userData, fetchUserData } = useStore()
     const [loading, setLoading] = useState(false)
-    const [simbriefUsername, setSimbriefUsername] = useState('');
-    const [simbriefData, setSimbriefData] = useState<SimbriefData | null>(null)
+    const [simbriefUsername, setSimbriefUsername] = useState('')
+    const [currentFlightId, setCurrentFlightId] = useState('')
     const [error, setError] = useState<string | null>(null)
     const { userId } = useAuth()
 
-    const simbriefUsernameFetch = useCallback(async () => {
-      try {
-
-        if (!userId) redirect("/sign-in");
-
-        setSimbriefUsername(getLocalData('usernameSimbrief') || '');
-        
-      } catch (error) {
-        console.error('Error fetching simbrief username:', error);
-      }
-  
-    }, [userId])
-
-    const handleImport = async () => {
-      setLoading(true);
-      setError(null);
-  
-      try {
-        const data = await LoadSimbriefData({ usernameSimbrief: simbriefUsername });
-        setSimbriefData(data!);
-      } catch (error: unknown) {
-        console.error('Error fetching data:', error);
-        setError(error instanceof Error ? error.message : 'An unexpected error occurred');
-        setSimbriefData(null);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    const loadImport = useCallback(async () => {
-      
-      try {
-        if (simbriefUsername) {
-
-          const data = await LoadSimbriefData({ usernameSimbrief: simbriefUsername });
-          setSimbriefData(data!)
-          console.log("simbriefData: ", data!)
-        }
-      } catch (error: unknown) {
-        console.error('Error fetching data:', error)
-        if (error instanceof Error) {
-          if (error.message === "Aircraft currently not supported!") {
-            // Handle unsupported aircraft case
-            console.log('Aircraft currently not supported')
-            // You can display an error message to the user here
-            setSimbriefData(null); // Set simbriefData to null for unsupported aircraft
-          } else {
-            // Handle other errors
-            console.log('Unexpected error:', error.message)
-          }
-        }
-      } finally {
-        // setLoading(false)
-      }
-  }, [simbriefUsername])
-
   useEffect(() => {
 
-    simbriefUsernameFetch()
+    if (userId) {
+      fetchUserData(userId)
+        .then(data => {
+          setSimbriefUsername(data.usernameSimbrief);
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        });
+    }
 
-  }, [simbriefUsernameFetch])
-  
-    useEffect(() => {
-      
-      loadImport();
-    }, [loadImport])
-    
-    useEffect(() => {
-        // Handle actions based on simbriefData changes
-        console.log('simbriefData updated: ', simbriefData);
-        // Populate your UI elements with simbriefData here
+  }, [userId, fetchUserData])
 
-        if (simbriefData) {
+  const handleImport = async () => {
+    setLoading(true)
+    setError(null)
 
-            const { date, time } = formatDateAndTime(simbriefData.departureDate)
-            console.log(date)
-            console.log(time)
-
-            simbriefData.departureDate = date
-            simbriefData.departureTime = time
+      console.log("sbUn: ", simbriefUsername)
+      if (simbriefUsername) {
+        try {
+          
+          fetchFlightData(simbriefUsername)
+        } catch (error: unknown) {
+          console.error('Error fetching data:', error);
+          setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+          // setSimbriefData(null);
+        } finally {
+          setLoading(false);
         }
-    }, [simbriefData])
+      } else {
+    }
+  }
 
   return (
     <div className='flex flex-col w-full px-4 py-4'>
@@ -174,9 +130,9 @@ const InitFlight = () => {
             <Button
                 className={`rounded-lg bg-white-1 text-black-1 hover:bg-orange-1 ${loading ? 'relative' : ''}`}
                 onClick={handleImport}
-                disabled={loading}
+                disabled={isLoading}
                 >
-                    {loading ? (
+                    {isLoading ? (
                         <AppleSpinner />
                         ) : (
                             'Import from Simbrief'
@@ -190,18 +146,18 @@ const InitFlight = () => {
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Departure Date</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Departure Time</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Aircraft Type</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.flightNumber : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? formatDateAndTime(simbriefData.departureDate).date : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? formatDateAndTime(simbriefData.departureDate).time : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.aircraftType : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.flightNumber : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? formatDateAndTime(flightData.departureDate).date : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? formatDateAndTime(flightData.departureDate).time : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.aircraftType : ''}</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Departure</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Arrival</div>
             <div></div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Aircraft Registration</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.origin : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.destination : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.origin : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.destination : ''}</div>
             <div></div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.registration : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.registration : ''}</div>
           </div>
         </div>
         <div className='flex border border-white-1 rounded-lg py-2 bg-white-5 mt-4'>
@@ -210,18 +166,18 @@ const InitFlight = () => {
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Estimated ZFW</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Estimated TOW</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Estimated LDW</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.dow + " " + simbriefData.units : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.zfw + " " + simbriefData.units : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.tow + " " + simbriefData.units : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.ldw + " " + simbriefData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.dow + " " + flightData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.zfw + " " + flightData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.tow + " " + flightData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.ldw + " " + flightData.units : ''}</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Block Fuel</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Fuel Burn</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Payload</div>
             <div className='bg-gray-1  text-white-1 p-1 text-xs text-center'>Pax Count</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.ramp_fuel + " " + simbriefData.units : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.trip_fuel + " " + simbriefData.units : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.pld + " " + simbriefData.units : ''}</div>
-            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{simbriefData ? simbriefData.paxCount : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.ramp_fuel + " " + flightData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.trip_fuel + " " + flightData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.pld + " " + flightData.units : ''}</div>
+            <div className='bg-gray-1  text-white-1 p-1 text-sm text-center'>{flightData ? flightData.paxCount : ''}</div>
           </div>
         </div>
     </div>

@@ -7,7 +7,7 @@ import { ColumnDef } from "@tanstack/react-table"
 export type lddUlds = {
     position: string
     uldNumber: string |  null
-    // destination: string
+    destination: string
     category: string
     weight: string
     pieces: string | null

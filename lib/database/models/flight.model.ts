@@ -1,4 +1,4 @@
-import { Schema, model, models, Document } from "mongoose";
+import { Schema, model, models, Document } from "mongoose"
 
 export interface FlightProps extends Document {
     simbriefId: string
@@ -43,6 +43,9 @@ export interface FlightProps extends Document {
     units: string
     limitation: string
     underload: string
+    paxMale: string
+    paxFemale: string
+    paxChildren: string
 }
 
 const FlightSchema = new Schema<FlightProps>({
@@ -176,10 +179,19 @@ const FlightSchema = new Schema<FlightProps>({
         required: true,
     },
     limitation: {
-        type: String,
+        type: String
     },
     underload: {
-        type: String,
+        type: String
+    },
+    paxMale: {
+        type: String
+    },
+    paxFemale: {
+        type: String
+    },
+    paxChildren: {
+        type: String
     },
 })
 

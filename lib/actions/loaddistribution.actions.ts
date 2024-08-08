@@ -4,13 +4,13 @@ import { aft_version_77W, config_77W, fwd_version_77W } from "@/constants/loadco
 import Flight from "../database/models/flight.model"
 import { connectToDatabase } from "../database/mongoose"
 
-export async function loadDistribution(db_Id:string) {
+export async function loadDistribution(db_Id:string, ttlPax_F:string, ttlPax_C:string, ttlPax_Y:string, fwd_Hld:string, aft_Hld:string, blk_Hld:string ) {
 
     await connectToDatabase()
 
     const flight = await Flight.findOne({_id: db_Id})
 
-    const averageBag = await calculateAverageBagPerPax(flight)
+    const averageBag = await calculateAverageBagPerPax(flight, ttlPax_F, ttlPax_C, ttlPax_Y)
     const ttlLD3Pax = await caculateTtlLD3Bag(averageBag.ttlBagY, averageBag.ttlBagC)
 
     // #### CHECK ROUNDING!!!
@@ -75,13 +75,13 @@ export async function loadDistribution(db_Id:string) {
     var availWeightForCargo = 
         parseInt(flight.pld)
         - (
-            (parseInt(flight.paxCountF) * parseFloat(flight.pax_weight))
-            + (parseInt(flight.paxCountC) * parseFloat(flight.pax_weight))
-            + (parseInt(flight.paxCountY) * parseFloat(flight.pax_weight))
-            + (parseInt(flight.bagCount) * parseFloat(flight.bag_weight)) 
-            - averageBag.ttlBagYWeight 
-            - averageBag.ttlBagCWeight 
-            - averageBag.ttlBagFWeight
+            (parseInt(ttlPax_F) * parseFloat(flight.pax_weight))
+            + (parseInt(ttlPax_C) * parseFloat(flight.pax_weight))
+            + (parseInt(ttlPax_Y) * parseFloat(flight.pax_weight))
+            // + (parseInt(flight.bagCount) * parseFloat(flight.bag_weight)) 
+            + averageBag.ttlBagYWeight 
+            + averageBag.ttlBagCWeight 
+            + averageBag.ttlBagFWeight
         )
     console.log("availWeightForCargo = ", availWeightForCargo.toFixed(0))
 
@@ -89,9 +89,9 @@ export async function loadDistribution(db_Id:string) {
                                             fwdHldUlds,
                                             aftHldUlds,
                                             blkHldUlds,
-                                            flight.fwd_hold,
-                                            flight.aft_hold,
-                                            flight.blk_hold
+                                            fwd_Hld,
+                                            aft_Hld,
+                                            blk_Hld
                                         )
 
     var availWeightCargoFwd = assignedCargoWeight.availWeightCargoFwd
@@ -109,7 +109,7 @@ export async function loadDistribution(db_Id:string) {
     }
 }
 
-async function calculateAverageBagPerPax(flightData: any) {
+async function calculateAverageBagPerPax(flightData: any, ttlPax_F:string, ttlPax_C:string, ttlPax_Y:string) {
 
     const averageBag = ["0.75", "0.85", "0.95", "1.00", "1.05", "1.15", "1.25", "1.35", "1.45", "1.50"]
 
@@ -120,11 +120,12 @@ async function calculateAverageBagPerPax(flightData: any) {
     }
 
     // var paxCount = flight.paxCount
-    var paxCountF = flightData!.paxCount_F
-    var paxCountC = flightData!.paxCount_C
-    var paxCountY = flightData!.paxCount_Y
+    var paxCountF = parseInt(ttlPax_F)
+    var paxCountC = parseInt(ttlPax_C)
+    var paxCountY = parseInt(ttlPax_Y)
 
     // CALCULATE TTL BAGS Y-CLASS BASED ON BAG AVERAGE + TTL WEIGHT
+    console.log("ba Y: ", getBagAverage(averageBag))
     var ttlBagY = Math.floor(paxCountY * getBagAverage(averageBag))
     var ttlBagYWeight = ttlBagY * parseFloat(flightData.bag_weight)
     console.log("Ttl bag Y: ", ttlBagY, " Average: ", ttlBagY/paxCountY, " Ttl weight: ", ttlBagYWeight)
@@ -410,10 +411,12 @@ async function assignCatToLD3(
 
 async function assignCargoWeights2Holds(fwdHldUlds:string[], aftHldUlds:string[], blkHldUlds:string[], fwd_hold:string, aft_hold:string, blk_hold:string) {
 
+    console.log("fwd_hold: ", fwd_hold)
+
     // FWD HOLD
-    var ttlWeightFwdHld = parseInt(fwd_hold)
-    var ttlBagWeightFwd = 0
-    var availWeightCargoFwd = 0
+    var ttlWeightFwdHld:number = parseInt(fwd_hold)
+    let ttlBagWeightFwd:number = 0
+    let availWeightCargoFwd:number = 0
 
     for (let index = 0; index < fwdHldUlds.length; index++) {
         const element = fwdHldUlds[index];

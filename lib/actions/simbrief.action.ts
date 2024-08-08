@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath } from "next/cache"
+import React from "react"
 
 import { connectToDatabase } from "../database/mongoose"
 import { handleError } from "../utils"
@@ -33,6 +33,7 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
             if (data.aircraft.iata_code === "77W") {
 
                 const flightState = await checkFlight({flightData:data, usernameSimbrief:usernameSimbrief})
+                console.log("Status: ", flightState?.status)
     
                 if (flightState!.status === "update flight") {
     
@@ -59,7 +60,7 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
                         zfw: updatedFlight.zfw,
                         zfwi: updatedFlight.zfwi,
                         tow: updatedFlight.tow,
-                        towi: updatedFlight.tow,
+                        towi: updatedFlight.towi,
                         ldw: updatedFlight.ldw,
                         pld: updatedFlight.pld,
                         paxCount: updatedFlight.paxCount,
@@ -83,6 +84,11 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
                         aft_hold: updatedFlight.aft_hold,
                         blk_hold: updatedFlight.blk_hold,
                         fwd_hold: updatedFlight.fwd_hold,
+                        limitation: updatedFlight.limitation,
+                        underload: updatedFlight.underload,
+                        paxMale: updatedFlight.paxMale,
+                        paxFemale: updatedFlight.paxFemale,
+                        paxChildren: updatedFlight.paxChildren,
                       }
 
                     return plainData
@@ -111,7 +117,7 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
                         zfw: newFlight.zfw,
                         zfwi: newFlight.zfwi,
                         tow: newFlight.tow,
-                        towi: newFlight.tow,
+                        towi: newFlight.towi,
                         ldw: newFlight.ldw,
                         pld: newFlight.pld,
                         paxCount: newFlight.paxCount,
@@ -135,6 +141,11 @@ export async function LoadSimbriefData({usernameSimbrief}:{usernameSimbrief:stri
                         aft_hold: newFlight.aft_hold,
                         blk_hold: newFlight.blk_hold,
                         fwd_hold: newFlight.fwd_hold,
+                        limitation: newFlight.limitation,
+                        underload: newFlight.underload,
+                        paxMale: newFlight.paxMale,
+                        paxFemale: newFlight.paxFemale,
+                        paxChildren: newFlight.paxChildren,
                       }
 
                     return plainData
@@ -178,8 +189,7 @@ export async function checkFlight({flightData, usernameSimbrief}:{flightData:any
 
         if (currentFlightId === "No currentFlightId found") {
 
-            // INSERT FLIGHT IN DB
-            await createFlight({flightData:flightData, usernameSimbrief:usernameSimbrief})
+            return{ status: "create new flight", id: "" }
 
         } else {
             
@@ -188,22 +198,15 @@ export async function checkFlight({flightData, usernameSimbrief}:{flightData:any
             // LOOK UP FLIGHT WITH DB OBJECT_ID
             const flight_db_id = await getUserCurrentFlight(currentFlightId)
 
-            // console.log("db _id: ", flight_db_id._id)
-            // EXTRACT SIMBRIEFID FROM FLIGHT
-            // console.log("simbriefId loaded: ", flight_db_id.simbriefId, "simbriefId download: ", flightData.params.sequence_id)
-            // COMPARE WITH SEQUENCE_ID OF DOWNLOADED FLIGHT
-
             // IF SIMBRIEFID = SEQUENCE_ID => UPDATE FLIGHT
             if (flight_db_id.simbriefId === flightData.params.sequence_id) {
-                // console.log("SimbriefId and sequence_id match, updating flight")
                 
-                return({status: "update flight", id: flight_db_id._id as string})
+                return{ status: "update flight", id: flight_db_id._id as string }
             }
             // IF SIMBRIEFID != SEQUENCE_ID => CREATE NEW FLIGHT & UPDATE CURRENTFLIGHTID
             else {
-                // console.log("SimbriefId and sequence_id do not match, creating new flight")
                 
-                return({status: "create new flight", id: ""})
+                return{ status: "create new flight", id: "" }
             }
         } 
     } catch (error) {
@@ -261,39 +264,44 @@ export async function createFlight({flightData, usernameSimbrief}:{flightData:an
             units: flightData.params.units,
             limitation: "",
             underload: "0",
+            paxMale:"0",
+            paxFemale: "0",
+            paxChildren: "0",
         }
     )
 
-    console.log("usernameSimbrief: ", usernameSimbrief)
-    
     await updateUserWithFlightData(usernameSimbrief, newFlight._id)
+
+    console.log("usernameSimbrief: ", usernameSimbrief)
     
     const updatedWnB = await calcWnB(newFlight._id)
 
     if (updatedWnB.status === "success") {
 
-        await Flight.findOneAndUpdate(newFlight._id, {
-                zfwi: updatedWnB.zfwIndex!,
-                zfwmac: updatedWnB.zfwMac!,
-                towi: updatedWnB.towIndex!,
-                towmac: updatedWnB.towMac!,
-                paxCount_F: updatedWnB.paxF!,
-                paxCount_C: updatedWnB.paxC!,
-                paxCount_Y: updatedWnB.paxY!,
-                fwd_hold: updatedWnB.fwdHld!,
-                aft_hold: updatedWnB.aftHld!,
-                blk_hold: updatedWnB.blkHld!,
-                fwd_hold_uld: updatedWnB.fwd_hold_uld,
-                aft_hold_uld: updatedWnB.aft_hold_uld,
-                blk_hold_uld: updatedWnB.blk_hold_uld,
-                limitation: updatedWnB.limitation,
-                underload: updatedWnB.underload,
+        const updatedNewFlight = await Flight.findOneAndUpdate(newFlight._id, {
+                                    zfwi: updatedWnB.zfwIndex!,
+                                    zfwmac: updatedWnB.zfwMac!,
+                                    towi: updatedWnB.towIndex!,
+                                    towmac: updatedWnB.towMac!,
+                                    paxCount_F: updatedWnB.paxF!,
+                                    paxCount_C: updatedWnB.paxC!,
+                                    paxCount_Y: updatedWnB.paxY!,
+                                    paxMale: updatedWnB.paxMale!,
+                                    paxFemale: updatedWnB.paxFemale!,
+                                    paxChildren: updatedWnB.paxChildren!,
+                                    fwd_hold: updatedWnB.fwdHld!,
+                                    aft_hold: updatedWnB.aftHld!,
+                                    blk_hold: updatedWnB.blkHld!,
+                                    fwd_hold_uld: updatedWnB.fwd_hold_uld,
+                                    aft_hold_uld: updatedWnB.aft_hold_uld,
+                                    blk_hold_uld: updatedWnB.blk_hold_uld,
+                                    limitation: updatedWnB.limitation,
+                                    underload: updatedWnB.underload,
             },
             {new: true},
         )
+        return updatedNewFlight
     }
-    console.log("newFlight: ", newFlight)
-    return newFlight
 
     } catch (error) {
         handleError(error)
@@ -318,16 +326,11 @@ export async function updateFlight({flightData, usernameSimbrief, _id}:{flightDa
             dow: flightData.weights.oew,
             doi: aircraft.find((type) => type.acft === flightData.aircraft.iata_code)?.doi,
             zfw: flightData.weights.est_zfw,
-            // zfwi: "0",
             tow: flightData.weights.est_tow,
-            // towi: "0",
             ldw: flightData.weights.est_ldw,
             pld: flightData.weights.payload,
             paxCount: flightData.weights.pax_count,
             pax_weight: flightData.weights.pax_weight,
-            // paxCount_F: "0",
-            // paxCount_C: "0",
-            // paxCount_Y: "0",
             bagCount: flightData.weights.bag_count,
             bag_weight: flightData.weights.bag_weight,
             cargo: flightData.weights.cargo,
@@ -370,3 +373,25 @@ export async function updateFlight({flightData, usernameSimbrief, _id}:{flightDa
         handleError(error)
     }
 }
+
+export async function formatDateAndTime(isoString: string): Promise<{ date: string; time: string }> {
+    const date = new Date(isoString);
+  
+    const dateOptions: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
+      year: '2-digit'
+    };
+  
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour12: false, // Force 24-hour format
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'UTC'
+    };
+  
+    const formattedDate = date.toLocaleDateString('en-GB', dateOptions).replace(',', '')
+    const formattedTime = date.toLocaleTimeString('en-GB', timeOptions)
+  
+    return { date: formattedDate, time: formattedTime }
+  }

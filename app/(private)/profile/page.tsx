@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from 'zod'
 
+import { useStore } from '@/lib/database/storeData'
+
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -29,25 +31,35 @@ const simbriefSchema = z.object({
 
 const Profile = () => {
 
+  const { userData, fetchUserData } = useStore()
   const [simbriefUsername, setSimbriefUsername] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const { userId } = useAuth()
 
-  const simbriefUsernameFetch = useCallback(async () => {
-    try {
-      if (!userId) redirect("/sign-in");
+  // const simbriefUsernameFetch = useCallback(async () => {
+  //   try {
+  //     if (!userId) redirect("/sign-in");
 
-      // const user = await getUserById(userId);
-      const user = getLocalData('usernameSimbrief');
-      setSimbriefUsername(user as string || '')
-      setIsLoading(false);
-      console.log(user)
-    } catch (error) {
-      console.error('Error fetching simbrief username:', error);
-      setIsLoading(false);
-    }
+  //     // const user = await getUserById(userId);
+  //     const user = getLocalData('usernameSimbrief');
+  //     setSimbriefUsername(user as string || '')
+  //     setIsLoading(false);
+  //     console.log(user)
+  //   } catch (error) {
+  //     console.error('Error fetching simbrief username:', error);
+  //     setIsLoading(false);
+  //   }
 
-  }, [userId])
+  // }, [userId])
+
+  useEffect(() => {
+    if (userId) fetchUserData(userId)
+
+      if (userData) {
+        setSimbriefUsername(userData?.usernameSimbrief)
+      }
+
+  }, [userId, fetchUserData])
 
   const initialValues = useMemo(() => ({ simbriefUsername }), [simbriefUsername]);
 
@@ -64,11 +76,11 @@ const Profile = () => {
     console.log(values)
   }
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    simbriefUsernameFetch()
+  //   simbriefUsernameFetch()
 
-  }, [simbriefUsernameFetch])
+  // }, [simbriefUsernameFetch])
 
   useEffect(() => {
     form.reset({ simbriefUsername });

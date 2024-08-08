@@ -6,13 +6,20 @@ import { useAuth } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 import { uldPositions_77W } from '@/constants/loadconfigindex';
 import { getUserById, getUserCurrentFlight } from '@/lib/actions/user.actions';
-import { allLoadedUlds, calculatePiecesAndWeights } from '@/lib/actions/loadplan.actions';
+import { allLoadedUlds, calculatePiecesAndWeights, generateEDPloadplan } from '@/lib/actions/loadplan.actions';
 import { DataTable } from '@/app/(private)/flight/data-table';
 import { columns } from '@/app/(private)/flight/columns';
 import { handleError } from '@/lib/utils';
+import { useStore } from '@/lib/database/storeData';
+import { Button } from './ui/button';
+import { AppleSpinner } from './shared/appeSpinner';
+import { formatDateAndTime } from '@/lib/actions/simbrief.action';
+import Edp_Loadplan from './Edp_Loadplan';
 
 interface UserData {
   usernameSimbrief: string
@@ -62,6 +69,11 @@ interface SimbriefData {
   aft_hold: string,
   blk_hold: string,
   fwd_hold: string,
+  limitation: string,
+  underload: string,
+  paxMale: string,
+  paxFemale: string,
+  paxChildren: string,
 }
 
 interface ULD {
@@ -85,36 +97,17 @@ interface UldData {
   destination: string
 }
 
-function formatDateAndTime(isoString: string): { date: string; time: string } {
-  const date = new Date(isoString);
-
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    day: '2-digit',
-    month: 'short',
-    year: '2-digit'
-  };
-
-  const timeOptions: Intl.DateTimeFormatOptions = {
-    hour12: false, // Force 24-hour format
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'UTC'
-  };
-
-  const formattedDate = date.toLocaleDateString('en-GB', dateOptions).replace(',', '')
-  const formattedTime = date.toLocaleTimeString('en-GB', timeOptions)
-
-  return { date: formattedDate, time: formattedTime }
-}
-
 const Loadplan = () => {
 
-  // const [loading, setLoading] = useState(false)
-  const [userData, setUserData] = useState<UserData | null>(null)
+  const [loading, setLoading] = useState(false)
+  const { userData } = useStore()
+  const { flightData } = useStore()
   
   const [simbriefUsername, setSimbriefUsername] = useState('');
   const [currentFlightId, setCurrentFlightId] = useState('');
   const [flight, setFlight] = useState<SimbriefData | null>(null)
+  const [formattedStd, setFormattedStd] = useState<string>('')
+  const [formattedDate, setFormattedDate] = useState<string>('')
 
   const [uldLoadData, setUldLoadData] = useState<string[]>([])
   const [blkLoadData, setBlkLoadData] = useState<string[]>([])
@@ -128,7 +121,7 @@ const Loadplan = () => {
   const [ttlMailWeight, setTtlMailWeight] = useState(0)
   const [ttlTrafficLoad, setTtlTrafficLoad] = useState(0)
 
-  // const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const { userId } = useAuth()
 
   const simbriefUsernameFetch = async () => {
@@ -137,7 +130,7 @@ const Loadplan = () => {
 
         if (!userId) redirect("/sign-in");
 
-        setUserData(await getUserById(userId))
+        // setUserData(await getUserById(userId))
 
         if (userData) {
           setSimbriefUsername(userData.usernameSimbrief);
@@ -152,6 +145,22 @@ const Loadplan = () => {
   }
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const createEDPlir = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await generateEDPloadplan(userData, flightData, ttlCargoWeight.toFixed(), ttlMailWeight.toFixed(), ttlBagWeight.toFixed())
+      console.log(data)
+    } catch (error: unknown) {
+      console.error('Error fetching data:', error);
+      setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+      
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const uldData = useCallback(async () => {
 
@@ -212,12 +221,28 @@ const Loadplan = () => {
   useEffect(() => {
     if (currentFlightId) {
       const fetchFlightData = async () => {
-        const fd = await getUserCurrentFlight(currentFlightId);
-        setFlight(fd);
+        const fd = await getUserCurrentFlight(currentFlightId)
+        setFlight(fd)
       }
       fetchFlightData()
     }
   }, [currentFlightId])
+
+  useEffect(() => {
+    if (flight) {
+      const formatAndSetStd = async () => {
+        const { time } = await formatDateAndTime(flight.departureDate);
+        setFormattedStd(`${time}Z`);
+      };
+      formatAndSetStd();
+
+      const formatAndSetDate = async () => {
+        const { date } = await formatDateAndTime(flight.departureDate);
+        setFormattedDate(date)
+      };
+      formatAndSetDate();
+    }
+  }, [flight])
   
   useEffect(() => {
     if (flight) {
@@ -237,22 +262,6 @@ const Loadplan = () => {
   }, [flight, allUldData]);
 
   useEffect(() => {
-
-    const weightsNpieces = async () => {
-      if (flight && allUldData) {
-        try {  
-          const pNw = await calculatePiecesAndWeights(flight, allUldData)
-          
-        } catch (error) {
-          handleError(error)
-        }
-      }
-    }
-
-    weightsNpieces()
-  }, [flight, allUldData])
-
-  useEffect(() => {
     simbriefUsernameFetch()
   })
 
@@ -270,7 +279,7 @@ const Loadplan = () => {
     const ctx = canvas.getContext('2d')!
 
     const canvasWidth = window.innerWidth
-    const canvasHeight = 200 // Adjust as needed
+    const canvasHeight = 175 // Adjust as needed
     canvas.width = canvasWidth
     canvas.height = canvasHeight
 
@@ -552,9 +561,37 @@ const Loadplan = () => {
     })
   })
 
+  const printRef = useRef<HTMLDivElement>(null);
+
+  const handlePrint = () => {
+    if (printRef.current) {
+      printRef.current.classList.remove('hidden'); // Show the element
+      const printContent = printRef.current.outerHTML;
+      const windowContent = window.open('', '_blank', 'width=800,height=600');
+      
+      if (windowContent) {
+
+        windowContent.document.write(printContent);
+        windowContent.document.title = 'Loadplan'
+        windowContent.document.close();
+        windowContent.print();
+        printRef.current.classList.add('hidden'); // Hide the element again
+      }
+    }
+  }
+
   return (
-    <div className='flex flex-col w-full px-2 py-2'>
-      <div className='flex flex-col justify-center items-center w-full py-5'>
+    <div className='flex flex-col w-full px-2 py-1'>
+      <div ref={printRef} id='printable-loadplan' className='hidden'>
+        <Edp_Loadplan 
+          stdTime={formattedStd} 
+          stdDate={formattedDate} 
+          ttlCargoWeight={ttlCargoWeight.toFixed()}
+          ttlMailWeight={ttlMailWeight.toFixed()}
+          ttlBagWeight={ttlBagWeight.toFixed()}
+        />
+      </div>
+      <div className='flex flex-col justify-center items-center w-full py-2'>
         <div className='flex flex-row justify-between items-center w-full pb-2'>
           <div className='grid grid-cols-6 mt-2 gap-x-2 w-full p-2 border-1 border rounded-md border-white-1'>
             <div className=' text-white-1 p-1 text-md text-center border-1 border-r border-white-1'>
@@ -564,10 +601,10 @@ const Loadplan = () => {
               From/To: {flight ? flight.origin+"/"+flight.destination : " "}
             </div>
             <div className=' text-white-1 p-1 text-md text-center border-1 border-r border-white-1'>
-              STD: {flight ? formatDateAndTime(flight.departureDate).time + "Z" : " "}
+              STD: {flight ? formattedStd.replace(":","") : " "}
             </div>
             <div className=' text-white-1 p-1 text-md text-center border-1 border-r border-white-1'>
-              Date: {flight ? formatDateAndTime(flight.departureDate).date : " "}
+              Date: {flight ? formattedDate : " "}
             </div>
             <div className=' text-white-1 p-1 text-md text-center border-1 border-r border-white-1'>
               A/C Reg: {flight ? flight.registration : " "}
@@ -583,7 +620,7 @@ const Loadplan = () => {
         <canvas ref={canvasRef} key="myCanvas" className='bg-gray-1 pt-10 pb-0 px-5 w-full'/>
       </div>
       <div className='flex flex-row justify-between items-start w-full py-5 bg-orange-1 h-[350px]'>
-        <div className='px-5 mt-10 w-1/3'>
+        <div className='px-5 w-1/2'>
           <Card>
             <CardHeader>
               <CardTitle>Summary</CardTitle>
@@ -617,12 +654,61 @@ const Loadplan = () => {
             </CardContent>
           </Card>
         </div>
-        <div className='px-5 w-2/3'>
-          <h1 className='px-8'>ULD Overview</h1>
-          <div className="container mx-auto py-5 overflow-y-auto">
+        <div className='px-5 w-1/2'>
+          <div className="container mx-auto overflow-y-auto">
             <DataTable columns={columns} data={allUldData} />
           </div>
         </div>
+        <div className='px-5 w-1/5'>
+          <div className='flex flex-col items-start justify-center w-full space-y-3'>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button 
+                  className={`rounded-lg bg-white-1 text-black-1 hover:bg-gray-1 ${loading ? 'relative' : ''} w-full`}
+                  onClick={createEDPlir}
+                  disabled={loading}
+                  >
+                    {loading ? (
+                          <AppleSpinner />
+                          ) : (
+                              'View Loadplan'
+                          )
+                      }
+                </Button>
+              </DialogTrigger>
+              <DialogContent className='bg-white-1 rounded-lg p-4 w-[1000px] h-[500px] overflow-y-scroll'>
+                <DialogHeader>
+                  <DialogTitle>Loadplan</DialogTitle>
+                </DialogHeader>
+                <Edp_Loadplan 
+                  stdTime={formattedStd} 
+                  stdDate={formattedDate} 
+                  ttlCargoWeight={ttlCargoWeight.toFixed()}
+                  ttlMailWeight={ttlMailWeight.toFixed()}
+                  ttlBagWeight={ttlBagWeight.toFixed()}
+                />
+              </DialogContent>
+            </Dialog>
+              <Button className={`rounded-lg bg-white-1 text-black-1 hover:bg-gray-1 w-full`}
+                // onClick={}
+                // disabled={}
+                >
+                Send Loadplan
+              </Button>
+              <Button className={`rounded-lg bg-white-1 text-black-1 hover:bg-gray-1 w-full`}
+                onClick={handlePrint}
+                // disabled={}
+                >
+                Print Loadplan
+              </Button>
+              <Button className={`rounded-lg bg-white-1 text-black-1 hover:bg-gray-1 w-full`}
+                // onClick={}
+                disabled
+                >
+                View NOTOC
+              </Button>
+            </div>
+          </div>
       </div>
     </div>
   )

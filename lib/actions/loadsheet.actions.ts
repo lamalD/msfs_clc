@@ -77,3 +77,45 @@ export async function calculateUnderload(allowedTrafficLoad:number, totalTraffic
 
     return underload
 }
+
+export async function generateEDPloadsheet() {
+
+    function padStart(text:string, length:number) {
+      return text.padStart(length, ' ');
+    }
+  
+    console.log(`\n
+  L O A D S H E E T           CHECKED          APPROVED      EDNO\n
+  ALL WEIGHTS IN KILOGRAMS                                   ffa \n
+                                                                 \n
+  FROM/TO FLIGHT      A/C REG  VERSION      CREW     DATE    TIME\n
+  aaa aaa aaaffffa/f  mmmmmm   ttttttttttt  f/f/f    ffaaaff ffff\n
+                                                                 \n
+                        WEIGHT           DISTRIBUTION            \n
+  LOAD IN COMPARTMENTS    ffffff t------------------------------t\n
+                                 t------------------------------t\n
+  PASSENGER/CABIN BAG     ffffff fff/fff/fff/fff TTL fff CAB ffff\n
+                                 PAX fff/fff/fff SOC ff/ff/ff    \n
+  TOTAL TRAFFIC LOAD      ffffff BLKD ff/ff/ff                   \n
+  DRY OPERATING WEIGHT    ffffff                                 \n
+  ******************************                                 \n
+  ZERO FUEL WEIGHT ACTUAL ffffff MAX ffffff  a  ADJ              \n
+  ******************************                                 \n
+  TAKE OFF FUEL           ffffff                                 \n
+  ******************************                                 \n
+  TAKE OFF WEIGHT  ACTUAL ffffff MAX ffffff  a  ADJ              \n
+  ******************************                                 \n
+  TRIP FUEL               ffffff                                 \n
+  LANDING WEIGHT   ACTUAL ffffff MAX ffffff  a  ADJ              \n
+                                                                 \n
+  BALANCE AND SEATING CONDITIONS        LAST MINUTE CHANGES      \n
+  t-----------------------------t DEST  SPEC    CL/CPT + - WEIGHT\n
+  t-----------------------------t                                \n
+  t-----------------------------t                                \n
+  t-----------------------------t                                \n
+  t-----------------------------t                                \n
+                                                                 \n
+  UNDERLOAD BEFORE LMC    ffffff           LMC TOTAL + -         \n
+  CAPTAINS INFORMATION / NOTES                                   \n
+  LOADMESSAGE BEFORE LMC                                         \n`)
+  }

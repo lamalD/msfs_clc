@@ -59,15 +59,23 @@ export async function calcWnB(id: string) {
         console.log("Above Wing: ", ttlWeightAboveWing, " / Below Wing: ", ttlWeightBelowWing)
 
         //---Look for PAX DISTRIBUTION BASED ON %
+
+        let ttlPax_F: string = "0"
+        let ttlPax_C: string = "0"
+        let ttlPax_Y: string = "0"
+        let ttlPax: string = "0"
+
         if (flight.aircraftType === "77W") {
 
-            var ttlPax_F = paxData_PMDG77W.find((type) => type.paxLevel === pldPct)?.first
-            var ttlPax_C = paxData_PMDG77W.find((type) => type.paxLevel === pldPct)?.business
-            var ttlPax_Y = paxData_PMDG77W.find((type) => type.paxLevel === pldPct)?.economy
-            var ttlPax = paxData_PMDG77W.find((type) => type.paxLevel === pldPct)?.ttlPax
+            ttlPax_F = paxData_PMDG77W.find((type) => type.paxLevel === pldPct)!.first
+            ttlPax_C = paxData_PMDG77W.find((type) => type.paxLevel === pldPct)!.business
+            ttlPax_Y = paxData_PMDG77W.find((type) => type.paxLevel === pldPct)!.economy
+            ttlPax = paxData_PMDG77W.find((type) => type.paxLevel === pldPct)!.ttlPax
 
             console.log("F: ", ttlPax_F, " C: ", ttlPax_C, " Y: ", ttlPax_Y, " Ttl Pax: ", ttlPax)
         }
+
+        const { M, F, C } = dividePax(parseInt(ttlPax!))
 
         //---LOAD DISTRIBUTION
         var fwdHldPct = cargoDistributionData.find((type) => type.acft === flight.aircraftType)?.fwdHldPercentage
@@ -91,7 +99,7 @@ export async function calcWnB(id: string) {
         console.log("ZFWi: ", zfwDetails!.index, "MAC ZFW: ", zfwDetails!.mac)
         console.log("TOWi: ", towDetails!.index, "MAC TOW: ", towDetails!.mac)
         
-        const loadData = await loadDistribution(id)
+        const loadData = await loadDistribution(id, ttlPax_F, ttlPax_C, ttlPax_Y, fwdHld, aftHld, blkHld)
 
         const operatingWeight = await calculateOperatingWeight(flight.dow, flight.takeoffFuel)
         console.log("Operating Weight = ", operatingWeight)
@@ -109,6 +117,9 @@ export async function calcWnB(id: string) {
             paxC: ttlPax_C,
             paxY: ttlPax_Y,
             paxTtl: ttlPax,
+            paxMale: M,
+            paxFemale: F,
+            paxChildren: C,
             fwdHld: fwdHld,
             aftHld: aftHld,
             blkHld: blkHld,
@@ -203,4 +214,14 @@ export async function calculateTOWindex(flightData:any, zfwIndex:string) {
 
         return({index: towIndex.toFixed(2), mac: macTOW.toFixed(1)})
     }
+}
+
+function dividePax(ttlPax: number): { M: number; F: number; C: number } {
+    const maxC = Math.floor(ttlPax * 0.1);
+    const C = Math.floor(Math.random() * (maxC + 1));
+    const remainingPax = ttlPax - C;
+    const maleRatio = Math.random();
+    const M = Math.floor(remainingPax * maleRatio);
+    const F = remainingPax - M;
+    return { M, F, C };
 }
